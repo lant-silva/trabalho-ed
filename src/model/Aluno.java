@@ -5,15 +5,15 @@ public class Aluno {
 	String ra;
 	String curso;
 	String periodo;
-	int semestre;
+	int ciclo;
 
-	public Aluno(String aluno, String ra, String curso, String periodo, int semestre) {
+	public Aluno(String aluno, String ra, String curso, String periodo, int ciclo) {
 		super();
 		this.aluno = aluno;
 		this.ra = ra;
 		this.curso = curso;
 		this.periodo = periodo;
-		this.semestre = semestre;
+		this.ciclo = ciclo;
 	}
 	
 	public String getAluno() {
@@ -40,10 +40,10 @@ public class Aluno {
 	public void setPeriodo(String periodo) {
 		this.periodo = periodo;
 	}
-	public int getSemestre() {
-		return semestre;
+	public int getCiclo() {
+		return ciclo;
 	}
-	public void setSemestre(int semestre) {
-		this.semestre = semestre;
+	public void setCiclo(int ciclo) {
+		this.ciclo = ciclo;
 	}
 }
