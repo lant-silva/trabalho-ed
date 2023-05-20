@@ -14,14 +14,13 @@ import model.Aluno;
 
 public class InserirAluno implements IInserirAluno{
 	@Override
-	public void manterAluno(String arquivo, String aluno, String ra, String curso, String periodo, String semestreTxt) throws Exception {
-		int ciclo = Integer.parseInt(semestreTxt);
+	public void manterAluno(String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
 		Aluno novo = new Aluno(aluno, ra, curso, periodo, ciclo);
 		
 		try {
 			inserir(arquivo, novo);
 		} catch (IOException e) {
-			System.err.println("Ocorreu um erro");
+			e.printStackTrace();
 		}
 		
 	}
@@ -35,10 +34,8 @@ public class InserirAluno implements IInserirAluno{
 		}
 		File arquivo = new File(path, nomeArquivo);
 		boolean exists = false;
-		boolean control = false;
 		if(arquivo.exists()) {
 			exists = true;
-			
 			//Codigo para verificar se um aluno ja existe na lista
 			FileInputStream fluxo = new FileInputStream(arquivo);
 			InputStreamReader leitor = new InputStreamReader(fluxo);
@@ -48,20 +45,16 @@ public class InserirAluno implements IInserirAluno{
 				String[] linhaSeparada = linha.split(";");
 				if(aluno.getRa().contains(linhaSeparada[1])) {
 					JOptionPane.showMessageDialog(null, "O aluno especificado já existe no sistema.");
-					control = true;
-					break;
+					return;
 				}
 			}
 		}
-		
-		if(control==false) {
-			FileWriter escrita = new FileWriter(arquivo, exists);
-			PrintWriter print = new PrintWriter(escrita);
-			print.write(conteudo);
-			print.flush();
-			print.close();
-			escrita.close();
-			JOptionPane.showMessageDialog(null, "Aluno gravado com sucesso.");
-		}
+		FileWriter escrita = new FileWriter(arquivo, exists);
+		PrintWriter print = new PrintWriter(escrita);
+		print.write(conteudo);
+		print.flush();
+		print.close();
+		escrita.close();
+		JOptionPane.showMessageDialog(null, "Aluno gravado com sucesso.");
 	}
 }

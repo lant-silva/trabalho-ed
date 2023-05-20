@@ -49,15 +49,14 @@ public class Tela {
 	private JFrame frmSistemaDeGesto;
 	private JTextField nomeAluno;
 	private JTextField raAluno;
-	private String arquivoAlunos = "lista-alunos.csv";
-	private InserirAluno controle = new InserirAluno();
+	private static final String arquivoAlunos = "lista-alunos.csv";
 	private JTable table;
-	private JTextField textField;
+	private JTextField inserirNomeGrupo;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField inserirCodigoGrupo;
 	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField buscaCodigoGrupo;
 	private JTable table_1;
 	private JTextField txtDia;
 	private JTextField txtMes;
@@ -68,6 +67,11 @@ public class Tela {
 	private JTextField textField_7;
 	private JTextField textField_8;
 	private JTable table_3;
+	private JTextField textField_9;
+	private JTable table_4;
+	private JTextField nomeGrupo;
+
+	private InserirAluno controle = new InserirAluno();
 	
 	/**
 	 * Launch the application.
@@ -121,6 +125,8 @@ public class Tela {
 		nomeAluno.setColumns(10);
 		
 		raAluno = new JTextField();
+		
+		//Código para impedir caracteres não-numéricos de serem inseridos
 		raAluno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -155,6 +161,24 @@ public class Tela {
 		inserirAluno.add(comboSemestre);
 		
 		JButton btnGravarAluno = new JButton("Gravar Aluno");
+		btnGravarAluno.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String nome = nomeAluno.getText();
+				String ra = raAluno.getText();
+				String curso = (String) comboCurso.getSelectedItem();
+				String periodo = (String) comboPeriodo.getSelectedItem();
+				String semestre = (String) comboSemestre.getSelectedItem();
+				semestre = semestre.substring(0,1);
+				int ciclo = Integer.parseInt(semestre);
+				try {
+					controle.manterAluno(arquivoAlunos, nome, ra, curso, periodo, ciclo);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
 		
 		btnGravarAluno.setBounds(325, 363, 149, 25);
 		inserirAluno.add(btnGravarAluno);
@@ -178,10 +202,7 @@ public class Tela {
 		JLabel lblCclosemestre = new JLabel("Cíclo/Semestre:");
 		lblCclosemestre.setBounds(153, 277, 110, 15);
 		inserirAluno.add(lblCclosemestre);
-//===============================================================================================================================//		
-		
-		
-//========================[ Tela Inserir Grupos ]================================================================================//		
+
 		JPanel inserirGrupos = new JPanel();
 		tabbedPane.addTab("Inserir Grupos", null, inserirGrupos, null);
 		inserirGrupos.setLayout(null);
@@ -215,17 +236,21 @@ public class Tela {
 		btnExcluir.setBounds(496, 409, 117, 25);
 		inserirGrupos.add(btnExcluir);
 		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(12, 95, 787, 71);
+		inserirGrupos.add(scrollPane_2);
+		
 		table = new JTable();
+		scrollPane_2.setViewportView(table);
 		table.setFont(new Font("Dialog", Font.PLAIN, 10));
 		table.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"},
-				{null, null, null, null, null},
+				{"", "", "", "", ""},
 				{null, null, null, null, null},
 				{null, null, null, null, null},
 			},
 			new String[] {
-				"New column", "New column", "New column", "New column", "New column"
+				"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -246,8 +271,6 @@ public class Tela {
 		table.getColumnModel().getColumn(2).setPreferredWidth(192);
 		table.getColumnModel().getColumn(3).setPreferredWidth(114);
 		table.getColumnModel().getColumn(4).setPreferredWidth(125);
-		table.setBounds(12, 95, 787, 64);
-		inserirGrupos.add(table);
 		
 		JLabel lblNomeAluno_1 = new JLabel("Nome Aluno:");
 		lblNomeAluno_1.setBounds(12, 31, 89, 15);
@@ -273,10 +296,10 @@ public class Tela {
 		lblTemaGrupo.setBounds(12, 275, 105, 15);
 		inserirGrupos.add(lblTemaGrupo);
 		
-		textField = new JTextField();
-		textField.setBounds(188, 191, 245, 19);
-		inserirGrupos.add(textField);
-		textField.setColumns(10);
+		inserirNomeGrupo = new JTextField();
+		inserirNomeGrupo.setBounds(188, 191, 245, 19);
+		inserirGrupos.add(inserirNomeGrupo);
+		inserirNomeGrupo.setColumns(10);
 		
 		textField_1 = new JTextField();
 		textField_1.setColumns(10);
@@ -292,10 +315,10 @@ public class Tela {
 		lblCodigoGrupo.setBounds(470, 193, 105, 15);
 		inserirGrupos.add(lblCodigoGrupo);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(580, 191, 114, 19);
-		inserirGrupos.add(textField_3);
-		textField_3.setColumns(10);
+		inserirCodigoGrupo = new JTextField();
+		inserirCodigoGrupo.setBounds(580, 191, 114, 19);
+		inserirGrupos.add(inserirCodigoGrupo);
+		inserirCodigoGrupo.setColumns(10);
 		
 		JLabel lblSubrea = new JLabel("Sub-área:");
 		lblSubrea.setBounds(470, 233, 70, 15);
@@ -314,10 +337,10 @@ public class Tela {
 		lblCdigoDoGrupo.setBounds(120, 76, 118, 15);
 		consultaGruposCodigo.add(lblCdigoDoGrupo);
 		
-		textField_5 = new JTextField();
-		textField_5.setBounds(282, 74, 287, 19);
-		consultaGruposCodigo.add(textField_5);
-		textField_5.setColumns(10);
+		buscaCodigoGrupo = new JTextField();
+		buscaCodigoGrupo.setBounds(282, 74, 287, 19);
+		consultaGruposCodigo.add(buscaCodigoGrupo);
+		buscaCodigoGrupo.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
 		btnBuscar.setBounds(581, 71, 117, 25);
@@ -327,26 +350,36 @@ public class Tela {
 		lblNomeGrupo_1.setBounds(120, 133, 92, 15);
 		consultaGruposCodigo.add(lblNomeGrupo_1);
 		
-		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setEditable(false);
-		textPane_1.setBounds(282, 133, 287, 21);
-		consultaGruposCodigo.add(textPane_1);
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(120, 189, 578, 141);
+		consultaGruposCodigo.add(scrollPane_4);
 		
 		table_1 = new JTable();
+		scrollPane_4.setViewportView(table_1);
 		table_1.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Codigo Grupo", "Nome Grupo", "Tema"},
-				{null, null, null},
+				{"", "", ""},
 			},
 			new String[] {
-				"New column", "New column", "New column"
+				"Codigo Grupo", "Nome Grupo", "Tema"
 			}
-		));
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		
+		nomeGrupo = new JTextField();
+		nomeGrupo.setEditable(false);
+		nomeGrupo.setBounds(282, 131, 287, 19);
+		consultaGruposCodigo.add(nomeGrupo);
+		nomeGrupo.setColumns(10);
 		table_1.getColumnModel().getColumn(0).setPreferredWidth(140);
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(125);
 		table_1.getColumnModel().getColumn(2).setPreferredWidth(280);
-		table_1.setBounds(120, 189, 578, 141);
-		consultaGruposCodigo.add(table_1);
 		
 		JPanel inserirOrientacoes = new JPanel();
 		tabbedPane.addTab("Inserir Orientações", null, inserirOrientacoes, null);
@@ -412,7 +445,7 @@ public class Tela {
 		table_2 = new JTable();
 		table_2.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Codigo Grupo", "Data Orienta\u00E7ao", "Nome Orienta\u00E7ao"},
+				{"Codigo Grupo", "Data Orientacao", "Nome Orientacao"},
 				{null, null, null},
 			},
 			new String[] {
@@ -481,10 +514,15 @@ public class Tela {
 		lblNomeOrientao.setBounds(61, 166, 137, 15);
 		consultarUltimaOrientacao.add(lblNomeOrientao);
 		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(97, 234, 556, 135);
+		consultarUltimaOrientacao.add(scrollPane_3);
+		
 		table_3 = new JTable();
+		scrollPane_3.setViewportView(table_3);
 		table_3.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"Codigo Grupo", "Data Orientacao", "Nome Orientacao"},
+				{"", "", ""},
 				{null, null, null},
 				{null, null, null},
 				{null, null, null},
@@ -506,7 +544,7 @@ public class Tela {
 				{null, null, null},
 			},
 			new String[] {
-				"New column", "New column", "New column"
+				"Codigo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
@@ -515,15 +553,89 @@ public class Tela {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
 		});
 		table_3.getColumnModel().getColumn(0).setPreferredWidth(104);
 		table_3.getColumnModel().getColumn(1).setPreferredWidth(129);
 		table_3.getColumnModel().getColumn(2).setPreferredWidth(366);
-		table_3.setBounds(97, 234, 556, 135);
-		consultarUltimaOrientacao.add(table_3);
 		
 		JPanel consultarSubarea = new JPanel();
 		tabbedPane.addTab("Consultar por Sub-área", null, consultarSubarea, null);
+		consultarSubarea.setLayout(null);
+		
+		JLabel lblInformeASubrea = new JLabel("Informe a Sub-área:");
+		lblInformeASubrea.setBounds(112, 74, 141, 15);
+		consultarSubarea.add(lblInformeASubrea);
+		
+		textField_9 = new JTextField();
+		textField_9.setBounds(271, 74, 281, 17);
+		consultarSubarea.add(textField_9);
+		textField_9.setColumns(10);
+		
+		JButton btnBuscar_2 = new JButton("Buscar");
+		btnBuscar_2.setBounds(564, 69, 117, 25);
+		consultarSubarea.add(btnBuscar_2);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_1.setBounds(112, 129, 569, 134);
+		consultarSubarea.add(scrollPane_1);
+		
+		table_4 = new JTable();
+		scrollPane_1.setViewportView(table_4);
+		table_4.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"", "", "", ""},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+				{null, null, null, null},
+			},
+			new String[] {
+				"Codigo Grupo", "Nome Grupo", "Temas", "\u00C1rea de Conhecimento"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		table_4.getColumnModel().getColumn(0).setPreferredWidth(101);
+		table_4.getColumnModel().getColumn(1).setPreferredWidth(170);
+		table_4.getColumnModel().getColumn(2).setPreferredWidth(150);
+		table_4.getColumnModel().getColumn(3).setPreferredWidth(212);
 
 		
 		
@@ -537,27 +649,6 @@ public class Tela {
 			}
 		});
 		
-//====================[ Ação do botão Gravar Aluno da tela "Inserir Aluno" ]=============================//		
-		btnGravarAluno.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String aluno = nomeAluno.getText();
-				String ra = raAluno.getText();
-				String curso = (String) comboCurso.getSelectedItem();
-				String periodo = (String) comboPeriodo.getSelectedItem();
-				String semestre="";
-				for(int i=1;i<=6;i++) {
-					String a = (String)(comboSemestre.getSelectedItem());
-					if(a.contains(Integer.toString(i))) {
-						semestre = Integer.toString(i);
-					}
-				}
-				try {
-					controle.manterAluno(arquivoAlunos, aluno, ra, curso, periodo, semestre);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
+
 	}
 }
