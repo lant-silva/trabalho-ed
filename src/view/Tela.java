@@ -52,10 +52,8 @@ public class Tela {
 	private static final String arquivoAlunos = "lista-alunos.csv";
 	private JTable table;
 	private JTextField inserirNomeGrupo;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	private JTextField inserirTemaGrupo;
 	private JTextField inserirCodigoGrupo;
-	private JTextField textField_4;
 	private JTextField buscaCodigoGrupo;
 	private JTable table_1;
 	private JTextField txtDia;
@@ -177,6 +175,8 @@ public class Tela {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				
 			}
 		});
 		
@@ -301,15 +301,10 @@ public class Tela {
 		inserirGrupos.add(inserirNomeGrupo);
 		inserirNomeGrupo.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(188, 231, 245, 19);
-		inserirGrupos.add(textField_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
-		textField_2.setBounds(188, 273, 245, 19);
-		inserirGrupos.add(textField_2);
+		inserirTemaGrupo = new JTextField();
+		inserirTemaGrupo.setColumns(10);
+		inserirTemaGrupo.setBounds(188, 273, 245, 19);
+		inserirGrupos.add(inserirTemaGrupo);
 		
 		JLabel lblCodigoGrupo = new JLabel("Código Grupo:");
 		lblCodigoGrupo.setBounds(470, 193, 105, 15);
@@ -324,10 +319,13 @@ public class Tela {
 		lblSubrea.setBounds(470, 233, 70, 15);
 		inserirGrupos.add(lblSubrea);
 		
-		textField_4 = new JTextField();
-		textField_4.setBounds(580, 231, 219, 19);
-		inserirGrupos.add(textField_4);
-		textField_4.setColumns(10);
+		JComboBox comboAreaInserir = new JComboBox();
+		comboAreaInserir.setBounds(188, 228, 245, 24);
+		inserirGrupos.add(comboAreaInserir);
+		
+		JComboBox comboSubareaInserir = new JComboBox();
+		comboSubareaInserir.setBounds(580, 228, 219, 24);
+		inserirGrupos.add(comboSubareaInserir);
 		
 		JPanel consultaGruposCodigo = new JPanel();
 		tabbedPane.addTab("Consulta de Grupos", (Icon) null, consultaGruposCodigo, null);
