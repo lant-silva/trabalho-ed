@@ -11,38 +11,37 @@
  */
 
 package view;
-import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.UIManager;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.table.DefaultTableModel;
 
 import control.InserirAluno;
+import control.InserirGrupos;
 import model.Aluno;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 
 public class Tela {
 
@@ -50,7 +49,7 @@ public class Tela {
 	private JTextField nomeAluno;
 	private JTextField raAluno;
 	private static final String arquivoAlunos = "lista-alunos.csv";
-	private JTable table;
+	private JTable tabelaAlunos;
 	private JTextField inserirNomeGrupo;
 	private JTextField inserirTemaGrupo;
 	private JTextField inserirCodigoGrupo;
@@ -68,8 +67,15 @@ public class Tela {
 	private JTextField textField_9;
 	private JTable table_4;
 	private JTextField nomeGrupo;
+	
+	Aluno alunoT1=new Aluno("","","","",0);
+	Aluno alunoT2=new Aluno("","","","",0);
+	Aluno alunoT3=new Aluno("","","","",0);
 
-	private InserirAluno controle = new InserirAluno();
+	private InserirAluno ManterAlunos = new InserirAluno();
+	private InserirGrupos ManterGrupos = new InserirGrupos();
+	
+	String[] alunosLista=null; //Tela Inserir Grupos: Implementação do comboBox de alunos
 	
 	/**
 	 * Launch the application.
@@ -159,26 +165,7 @@ public class Tela {
 		inserirAluno.add(comboSemestre);
 		
 		JButton btnGravarAluno = new JButton("Gravar Aluno");
-		btnGravarAluno.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String nome = nomeAluno.getText();
-				String ra = raAluno.getText();
-				String curso = (String) comboCurso.getSelectedItem();
-				String periodo = (String) comboPeriodo.getSelectedItem();
-				String semestre = (String) comboSemestre.getSelectedItem();
-				semestre = semestre.substring(0,1);
-				int ciclo = Integer.parseInt(semestre);
-				try {
-					controle.manterAluno(arquivoAlunos, nome, ra, curso, periodo, ciclo);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				
-			}
-		});
+
 		
 		btnGravarAluno.setBounds(325, 363, 149, 25);
 		inserirAluno.add(btnGravarAluno);
@@ -207,11 +194,22 @@ public class Tela {
 		tabbedPane.addTab("Inserir Grupos", null, inserirGrupos, null);
 		inserirGrupos.setLayout(null);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(110, 26, 309, 24);
-		inserirGrupos.add(comboBox);
+		JComboBox listaAlunos = new JComboBox();
+		try {
+			alunosLista = ManterGrupos.popularListaAlunos(arquivoAlunos);
+			listaAlunos.setModel(new DefaultComboBoxModel(alunosLista));
+			listaAlunos.setMaximumRowCount(999);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		listaAlunos.setBounds(110, 26, 309, 24);
+		inserirGrupos.add(listaAlunos);
+		
+		
 		
 		JButton btnAdicionarAluno = new JButton("Adicionar Aluno");
+
 		btnAdicionarAluno.setBounds(431, 25, 144, 25);
 		inserirGrupos.add(btnAdicionarAluno);
 		
@@ -240,14 +238,15 @@ public class Tela {
 		scrollPane_2.setBounds(12, 95, 787, 71);
 		inserirGrupos.add(scrollPane_2);
 		
-		table = new JTable();
-		scrollPane_2.setViewportView(table);
-		table.setFont(new Font("Dialog", Font.PLAIN, 10));
-		table.setModel(new DefaultTableModel(
+		tabelaAlunos = new JTable();
+		scrollPane_2.setViewportView(tabelaAlunos);
+		tabelaAlunos.setFont(new Font("Dialog", Font.PLAIN, 10));
+		
+		tabelaAlunos.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"", "", "", "", ""},
-				{null, null, null, null, null},
-				{null, null, null, null, null},
+				{alunoT1.getAluno(),alunoT1.getRa(),alunoT1.getCurso(),alunoT1.getPeriodo(),Integer.toString(alunoT1.getCiclo())},
+				{alunoT2.getAluno(),alunoT2.getRa(),alunoT2.getCurso(),alunoT2.getPeriodo(),Integer.toString(alunoT2.getCiclo())},
+				{alunoT3.getAluno(),alunoT3.getRa(),alunoT3.getCurso(),alunoT3.getPeriodo(),Integer.toString(alunoT3.getCiclo())},
 			},
 			new String[] {
 				"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
@@ -259,18 +258,17 @@ public class Tela {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			boolean[] columnEditables = new boolean[] {
-				false, false, false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
 		});
-		table.getColumnModel().getColumn(0).setPreferredWidth(134);
-		table.getColumnModel().getColumn(1).setPreferredWidth(132);
-		table.getColumnModel().getColumn(2).setPreferredWidth(192);
-		table.getColumnModel().getColumn(3).setPreferredWidth(114);
-		table.getColumnModel().getColumn(4).setPreferredWidth(125);
+		tabelaAlunos.getColumnModel().getColumn(0).setResizable(false);
+		tabelaAlunos.getColumnModel().getColumn(0).setPreferredWidth(134);
+		tabelaAlunos.getColumnModel().getColumn(1).setResizable(false);
+		tabelaAlunos.getColumnModel().getColumn(1).setPreferredWidth(132);
+		tabelaAlunos.getColumnModel().getColumn(2).setResizable(false);
+		tabelaAlunos.getColumnModel().getColumn(2).setPreferredWidth(192);
+		tabelaAlunos.getColumnModel().getColumn(3).setResizable(false);
+		tabelaAlunos.getColumnModel().getColumn(3).setPreferredWidth(114);
+		tabelaAlunos.getColumnModel().getColumn(4).setResizable(false);
+		tabelaAlunos.getColumnModel().getColumn(4).setPreferredWidth(125);
 		
 		JLabel lblNomeAluno_1 = new JLabel("Nome Aluno:");
 		lblNomeAluno_1.setBounds(12, 31, 89, 15);
@@ -642,11 +640,77 @@ public class Tela {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				Aluno criar = null;
-
 				
 			}
 		});
 		
-
+//===================[ Ação que insere um aluno na lista de alunos da tela "Inserir Aluno" ]============//		
+		btnGravarAluno.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String nome = nomeAluno.getText();
+				String ra = raAluno.getText();
+				String curso = (String) comboCurso.getSelectedItem();
+				String periodo = (String) comboPeriodo.getSelectedItem();
+				String semestre = (String) comboSemestre.getSelectedItem();
+				semestre = semestre.substring(0,1);
+				int ciclo = Integer.parseInt(semestre);
+				try {
+					ManterAlunos.manterAluno(arquivoAlunos, nome, ra, curso, periodo, ciclo);
+					alunosLista = ManterGrupos.popularListaAlunos(arquivoAlunos);
+					listaAlunos.setModel(new DefaultComboBoxModel(alunosLista));
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		btnAdicionarAluno.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(alunoT1.getAluno()=="") {
+					String nomeaux = (String) listaAlunos.getSelectedItem();
+					try {
+						alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}else if(alunoT2.getAluno()=="") {
+					String nomeaux = (String) listaAlunos.getSelectedItem();
+					try {
+						alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+				}else if(alunoT3.getAluno()==""){
+					String nomeaux = (String) listaAlunos.getSelectedItem();
+					try {
+						alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+				}else {
+					JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");
+				}
+				tabelaAlunos.setModel(new DefaultTableModel(
+						new Object[][] {
+							{alunoT1.getAluno(),alunoT1.getRa(),alunoT1.getCurso(),alunoT1.getPeriodo(),Integer.toString(alunoT1.getCiclo())},
+							{alunoT2.getAluno(),alunoT2.getRa(),alunoT2.getCurso(),alunoT2.getPeriodo(),Integer.toString(alunoT2.getCiclo())},
+							{alunoT3.getAluno(),alunoT3.getRa(),alunoT3.getCurso(),alunoT3.getPeriodo(),Integer.toString(alunoT3.getCiclo())},
+						},
+						new String[] {
+							"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
+						}
+					) {
+						Class[] columnTypes = new Class[] {
+							String.class, String.class, String.class, String.class, String.class
+						};
+						public Class getColumnClass(int columnIndex) {
+							return columnTypes[columnIndex];
+						}
+					});
+			}
+		});
 	}
 }

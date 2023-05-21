@@ -34,27 +34,38 @@ public class InserirAluno implements IInserirAluno{
 		}
 		File arquivo = new File(path, nomeArquivo);
 		boolean exists = false;
+		boolean control = false;
 		if(arquivo.exists()) {
 			exists = true;
-			//Codigo para verificar se um aluno ja existe na lista
-			FileInputStream fluxo = new FileInputStream(arquivo);
-			InputStreamReader leitor = new InputStreamReader(fluxo);
-			BufferedReader buffer = new BufferedReader(leitor);
-			String linha = buffer.readLine();
-			while(linha!=null) {
-				String[] linhaSeparada = linha.split(";");
-				if(aluno.getRa().contains(linhaSeparada[1])) {
-					JOptionPane.showMessageDialog(null, "O aluno especificado já existe no sistema.");
-					return;
-				}
-			}
 		}
+		
 		FileWriter escrita = new FileWriter(arquivo, exists);
 		PrintWriter print = new PrintWriter(escrita);
-		print.write(conteudo);
-		print.flush();
+		if(!alunoExiste(arquivo, aluno)) {
+			print.write(conteudo);
+			print.flush();
+		}
 		print.close();
 		escrita.close();
 		JOptionPane.showMessageDialog(null, "Aluno gravado com sucesso.");
+	}
+	
+	private boolean alunoExiste(File arquivo, Aluno aluno) throws IOException {
+		FileInputStream fluxo = new FileInputStream(arquivo);
+		InputStreamReader leitor = new InputStreamReader(fluxo);
+		BufferedReader buffer = new BufferedReader(leitor);
+		String linha = buffer.readLine();
+		while(linha!=null) {
+			String[] linhaSeparada = linha.split(";");
+			if(aluno.getRa().contains(linhaSeparada[1])) {
+				JOptionPane.showMessageDialog(null, "O aluno especificado já existe no sistema.");
+				return true;
+			}
+			linha = buffer.readLine();
+		}
+		buffer.close();
+		leitor.close();
+		fluxo.close();
+		return false;
 	}
 }
