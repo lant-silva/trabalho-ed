@@ -15,12 +15,11 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -48,7 +47,9 @@ public class Tela {
 	private JFrame frmSistemaDeGesto;
 	private JTextField nomeAluno;
 	private JTextField raAluno;
+	private static final String pathData = System.getProperty("user.dir")+File.separator+"data";
 	private static final String arquivoAlunos = "lista-alunos.csv";
+	private static final String arquivoGrupos = "lista-grupos.csv";
 	private JTable tabelaAlunos;
 	private JTextField inserirNomeGrupo;
 	private JTextField inserirTemaGrupo;
@@ -71,6 +72,7 @@ public class Tela {
 	Aluno alunoT1=new Aluno("","","","",0);
 	Aluno alunoT2=new Aluno("","","","",0);
 	Aluno alunoT3=new Aluno("","","","",0);
+	Aluno alunoT4=new Aluno("","","","",0);
 
 	private InserirAluno ManterAlunos = new InserirAluno();
 	private InserirGrupos ManterGrupos = new InserirGrupos();
@@ -194,18 +196,17 @@ public class Tela {
 		tabbedPane.addTab("Inserir Grupos", null, inserirGrupos, null);
 		inserirGrupos.setLayout(null);
 		
-		JComboBox listaAlunos = new JComboBox();
+		JComboBox listaAlunosTabela = new JComboBox();
 		try {
-			alunosLista = ManterGrupos.popularListaAlunos(arquivoAlunos);
-			listaAlunos.setModel(new DefaultComboBoxModel(alunosLista));
-			listaAlunos.setMaximumRowCount(999);
+			alunosLista = ManterGrupos.popularListaAlunos(pathData, arquivoAlunos);
+			listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
+			listaAlunosTabela.setMaximumRowCount(999);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		
-		listaAlunos.setBounds(110, 26, 309, 24);
-		inserirGrupos.add(listaAlunos);
-		
+		listaAlunosTabela.setBounds(110, 26, 309, 24);
+		inserirGrupos.add(listaAlunosTabela);
 		
 		
 		JButton btnAdicionarAluno = new JButton("Adicionar Aluno");
@@ -218,8 +219,16 @@ public class Tela {
 		textPane.setBounds(617, 29, 182, 21);
 		inserirGrupos.add(textPane);
 		
+		String raSelecionado = (String) listaAlunosTabela.getSelectedItem();
+		try {
+			textPane.setText(ManterGrupos.popularRa(pathData, arquivoAlunos, raSelecionado));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
 		JButton btnInserirGrupo = new JButton("Inserir Grupo");
-		btnInserirGrupo.setBounds(228, 409, 127, 25);
+
+		btnInserirGrupo.setBounds(139, 409, 127, 25);
 		inserirGrupos.add(btnInserirGrupo);
 		
 		JButton btnEditar = new JButton("Editar");
@@ -227,38 +236,23 @@ public class Tela {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnEditar.setBounds(367, 409, 117, 25);
+		btnEditar.setBounds(278, 409, 117, 25);
 		inserirGrupos.add(btnEditar);
 		
 		JButton btnExcluir = new JButton("Excluir");
-		btnExcluir.setBounds(496, 409, 117, 25);
+		btnExcluir.setBounds(407, 409, 117, 25);
 		inserirGrupos.add(btnExcluir);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(12, 95, 787, 71);
+		scrollPane_2.setBounds(12, 95, 787, 86);
 		inserirGrupos.add(scrollPane_2);
 		
 		tabelaAlunos = new JTable();
+		tabelaAlunos.setEnabled(false);
 		scrollPane_2.setViewportView(tabelaAlunos);
 		tabelaAlunos.setFont(new Font("Dialog", Font.PLAIN, 10));
+		montarTabela();
 		
-		tabelaAlunos.setModel(new DefaultTableModel(
-			new Object[][] {
-				{alunoT1.getAluno(),alunoT1.getRa(),alunoT1.getCurso(),alunoT1.getPeriodo(),Integer.toString(alunoT1.getCiclo())},
-				{alunoT2.getAluno(),alunoT2.getRa(),alunoT2.getCurso(),alunoT2.getPeriodo(),Integer.toString(alunoT2.getCiclo())},
-				{alunoT3.getAluno(),alunoT3.getRa(),alunoT3.getCurso(),alunoT3.getPeriodo(),Integer.toString(alunoT3.getCiclo())},
-			},
-			new String[] {
-				"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, String.class, String.class, String.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-		});
 		tabelaAlunos.getColumnModel().getColumn(0).setResizable(false);
 		tabelaAlunos.getColumnModel().getColumn(0).setPreferredWidth(134);
 		tabelaAlunos.getColumnModel().getColumn(1).setResizable(false);
@@ -325,57 +319,10 @@ public class Tela {
 		comboSubareaInserir.setBounds(580, 228, 219, 24);
 		inserirGrupos.add(comboSubareaInserir);
 		
-		JPanel consultaGruposCodigo = new JPanel();
-		tabbedPane.addTab("Consulta de Grupos", (Icon) null, consultaGruposCodigo, null);
-		consultaGruposCodigo.setLayout(null);
-		
-		JLabel lblCdigoDoGrupo = new JLabel("Código do Grupo");
-		lblCdigoDoGrupo.setBounds(120, 76, 118, 15);
-		consultaGruposCodigo.add(lblCdigoDoGrupo);
-		
-		buscaCodigoGrupo = new JTextField();
-		buscaCodigoGrupo.setBounds(282, 74, 287, 19);
-		consultaGruposCodigo.add(buscaCodigoGrupo);
-		buscaCodigoGrupo.setColumns(10);
-		
-		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(581, 71, 117, 25);
-		consultaGruposCodigo.add(btnBuscar);
-		
-		JLabel lblNomeGrupo_1 = new JLabel("Nome Grupo:");
-		lblNomeGrupo_1.setBounds(120, 133, 92, 15);
-		consultaGruposCodigo.add(lblNomeGrupo_1);
-		
-		JScrollPane scrollPane_4 = new JScrollPane();
-		scrollPane_4.setBounds(120, 189, 578, 141);
-		consultaGruposCodigo.add(scrollPane_4);
-		
-		table_1 = new JTable();
-		scrollPane_4.setViewportView(table_1);
-		table_1.setModel(new DefaultTableModel(
-			new Object[][] {
-				{"", "", ""},
-			},
-			new String[] {
-				"Codigo Grupo", "Nome Grupo", "Tema"
-			}
-		) {
-			boolean[] columnEditables = new boolean[] {
-				false, false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		
-		nomeGrupo = new JTextField();
-		nomeGrupo.setEditable(false);
-		nomeGrupo.setBounds(282, 131, 287, 19);
-		consultaGruposCodigo.add(nomeGrupo);
-		nomeGrupo.setColumns(10);
-		table_1.getColumnModel().getColumn(0).setPreferredWidth(140);
-		table_1.getColumnModel().getColumn(1).setPreferredWidth(125);
-		table_1.getColumnModel().getColumn(2).setPreferredWidth(280);
+		JButton btnLimparCampos = new JButton("Limpar Campos");
+
+		btnLimparCampos.setBounds(534, 409, 144, 25);
+		inserirGrupos.add(btnLimparCampos);
 		
 		JPanel inserirOrientacoes = new JPanel();
 		tabbedPane.addTab("Inserir Orientações", null, inserirOrientacoes, null);
@@ -472,6 +419,58 @@ public class Tela {
 		JButton btnExcluir_1 = new JButton("Excluir");
 		btnExcluir_1.setBounds(477, 409, 117, 25);
 		inserirOrientacoes.add(btnExcluir_1);
+		
+		JPanel consultaGruposCodigo = new JPanel();
+		tabbedPane.addTab("Consulta de Grupos", (Icon) null, consultaGruposCodigo, null);
+		consultaGruposCodigo.setLayout(null);
+		
+		JLabel lblCdigoDoGrupo = new JLabel("Código do Grupo");
+		lblCdigoDoGrupo.setBounds(120, 76, 118, 15);
+		consultaGruposCodigo.add(lblCdigoDoGrupo);
+		
+		buscaCodigoGrupo = new JTextField();
+		buscaCodigoGrupo.setBounds(282, 74, 287, 19);
+		consultaGruposCodigo.add(buscaCodigoGrupo);
+		buscaCodigoGrupo.setColumns(10);
+		
+		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar.setBounds(581, 71, 117, 25);
+		consultaGruposCodigo.add(btnBuscar);
+		
+		JLabel lblNomeGrupo_1 = new JLabel("Nome Grupo:");
+		lblNomeGrupo_1.setBounds(120, 133, 92, 15);
+		consultaGruposCodigo.add(lblNomeGrupo_1);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(120, 189, 578, 141);
+		consultaGruposCodigo.add(scrollPane_4);
+		
+		table_1 = new JTable();
+		scrollPane_4.setViewportView(table_1);
+		table_1.setModel(new DefaultTableModel(
+			new Object[][] {
+				{"", "", ""},
+			},
+			new String[] {
+				"Codigo Grupo", "Nome Grupo", "Tema"
+			}
+		) {
+			boolean[] columnEditables = new boolean[] {
+				false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		
+		nomeGrupo = new JTextField();
+		nomeGrupo.setEditable(false);
+		nomeGrupo.setBounds(282, 131, 287, 19);
+		consultaGruposCodigo.add(nomeGrupo);
+		nomeGrupo.setColumns(10);
+		table_1.getColumnModel().getColumn(0).setPreferredWidth(140);
+		table_1.getColumnModel().getColumn(1).setPreferredWidth(125);
+		table_1.getColumnModel().getColumn(2).setPreferredWidth(280);
 		
 		JPanel consultarUltimaOrientacao = new JPanel();
 		tabbedPane.addTab("Consultar Ultima Orientação", null, consultarUltimaOrientacao, null);
@@ -633,17 +632,14 @@ public class Tela {
 		table_4.getColumnModel().getColumn(2).setPreferredWidth(150);
 		table_4.getColumnModel().getColumn(3).setPreferredWidth(212);
 
+		/*
+		 * Ações do sistema
+		 * Variam de botões, cliques do mouse, entradas e saidas, etc. 
+		 * 
+		 * 
+		 */
 		
-		
-//====================[ Ação que gera a lista de alunos da tela "Inserir Grupo" ]========================//		
-		inserirGrupos.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				Aluno criar = null;
-				
-			}
-		});
-		
+
 //===================[ Ação que insere um aluno na lista de alunos da tela "Inserir Aluno" ]============//		
 		btnGravarAluno.addMouseListener(new MouseAdapter() {
 			@Override
@@ -656,9 +652,9 @@ public class Tela {
 				semestre = semestre.substring(0,1);
 				int ciclo = Integer.parseInt(semestre);
 				try {
-					ManterAlunos.manterAluno(arquivoAlunos, nome, ra, curso, periodo, ciclo);
-					alunosLista = ManterGrupos.popularListaAlunos(arquivoAlunos);
-					listaAlunos.setModel(new DefaultComboBoxModel(alunosLista));
+					ManterAlunos.manterAluno(pathData, arquivoAlunos, nome, ra, curso, periodo, ciclo);
+					alunosLista = ManterGrupos.popularListaAlunos(pathData, arquivoAlunos);
+					listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -666,51 +662,120 @@ public class Tela {
 			}
 		});
 		
+//==========================[ Botão que adiciona um aluno em um grupo ]=========================//		
 		btnAdicionarAluno.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				String nomeaux = (String) listaAlunosTabela.getSelectedItem();
 				if(alunoT1.getAluno()=="") {
-					String nomeaux = (String) listaAlunos.getSelectedItem();
-					try {
-						alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-					} catch (Exception e1) {
-						e1.printStackTrace();
+						try {
+							alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+						} catch (Exception e1) {
+							e1.printStackTrace();
 					}
 				}else if(alunoT2.getAluno()=="") {
-					String nomeaux = (String) listaAlunos.getSelectedItem();
-					try {
-						alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-					} catch (Exception e2) {
-						// TODO: handle exception
+					if(verificarExistenteTabela(nomeaux)==false) {
+						try {
+							alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}else if(alunoT3.getAluno()==""){
-					String nomeaux = (String) listaAlunos.getSelectedItem();
-					try {
-						alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-					} catch (Exception e2) {
-						// TODO: handle exception
+					if(verificarExistenteTabela(nomeaux)==false) {
+						try {
+							alunoT3 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}else if(alunoT4.getAluno()==""){
+					if(verificarExistenteTabela(nomeaux)==false) {
+						try {
+							alunoT4 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}else {
-					JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");
+					JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");					
 				}
-				tabelaAlunos.setModel(new DefaultTableModel(
-						new Object[][] {
-							{alunoT1.getAluno(),alunoT1.getRa(),alunoT1.getCurso(),alunoT1.getPeriodo(),Integer.toString(alunoT1.getCiclo())},
-							{alunoT2.getAluno(),alunoT2.getRa(),alunoT2.getCurso(),alunoT2.getPeriodo(),Integer.toString(alunoT2.getCiclo())},
-							{alunoT3.getAluno(),alunoT3.getRa(),alunoT3.getCurso(),alunoT3.getPeriodo(),Integer.toString(alunoT3.getCiclo())},
-						},
-						new String[] {
-							"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
-						}
-					) {
-						Class[] columnTypes = new Class[] {
-							String.class, String.class, String.class, String.class, String.class
-						};
-						public Class getColumnClass(int columnIndex) {
-							return columnTypes[columnIndex];
-						}
-					});
+				montarTabela();	
 			}
 		});
+		
+		listaAlunosTabela.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					textPane.setText(ManterGrupos.popularRa(pathData, arquivoAlunos, raSelecionado));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+//============[ Ação que limpa os campos da tela "Inserir Grupos" ]==============//		
+		btnLimparCampos.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				inserirNomeGrupo.setText("");
+				inserirCodigoGrupo.setText("");
+				inserirTemaGrupo.setText("");
+				alunoT1=new Aluno("","","","",0);
+				alunoT2=new Aluno("","","","",0);
+				alunoT3=new Aluno("","","","",0);
+				alunoT4=new Aluno("","","","",0);
+				montarTabela();
+			}
+		});
+		
+//============[ Ação que insere um grupo na lista de grupos, da tela "Inserir Grupos" ]==========//
+		btnInserirGrupo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Aluno[] grupo = {alunoT1,alunoT2,alunoT3,alunoT4};
+				String codigoG = inserirCodigoGrupo.getText();
+				String tema = inserirTemaGrupo.getText();
+				String nomeG = inserirNomeGrupo.getText();
+				String area = (String) comboAreaInserir.getSelectedItem();
+				String subarea = (String) comboSubareaInserir.getSelectedItem();
+				try {
+					ManterGrupos.inserirGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	public void montarTabela() {
+		tabelaAlunos.setModel(new DefaultTableModel(
+				new Object[][] {
+					{alunoT1.getAluno(),alunoT1.getRa(),alunoT1.getCurso(),alunoT1.getPeriodo(),Integer.toString(alunoT1.getCiclo())},
+					{alunoT2.getAluno(),alunoT2.getRa(),alunoT2.getCurso(),alunoT2.getPeriodo(),Integer.toString(alunoT2.getCiclo())},
+					{alunoT3.getAluno(),alunoT3.getRa(),alunoT3.getCurso(),alunoT3.getPeriodo(),Integer.toString(alunoT3.getCiclo())},
+					{alunoT4.getAluno(),alunoT4.getRa(),alunoT4.getCurso(),alunoT4.getPeriodo(),Integer.toString(alunoT4.getCiclo())},
+				},
+				new String[] {
+					"Nome Aluno", "R.A", "Curso", "Periodo", "Semestre"
+				}
+			) {
+				Class[] columnTypes = new Class[] {
+					String.class, String.class, String.class, String.class, String.class
+				};
+				public Class getColumnClass(int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+			});
+	}
+	
+	public boolean verificarExistenteTabela(String aluno) {
+		if(aluno.equals(alunoT1.getAluno())||aluno.equals(alunoT2.getAluno())||aluno.equals(alunoT3.getAluno())||aluno.equals(alunoT4.getAluno())) {
+			JOptionPane.showMessageDialog(null, "O aluno já foi inserido no grupo atual");
+			return true;
+		}else {
+			return false;
+		}
 	}
 }

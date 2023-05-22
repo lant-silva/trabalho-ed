@@ -14,25 +14,24 @@ import model.Aluno;
 
 public class InserirAluno implements IInserirAluno{
 	@Override
-	public void manterAluno(String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
+	public void manterAluno(String pathData, String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
 		Aluno novo = new Aluno(aluno, ra, curso, periodo, ciclo);
 		
 		try {
-			inserir(arquivo, novo);
+			inserir(pathData, arquivo, novo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
 	
-	private void inserir(String nomeArquivo, Aluno aluno) throws Exception {
-		String path = System.getProperty("user.dir")+"/data";
-		File dir = new File(path);
+	private void inserir(String pathData, String nomeArquivo, Aluno aluno) throws Exception {
+		File dir = new File(pathData);
 		String conteudo = aluno.getAluno()+";"+aluno.getRa()+";"+aluno.getCurso()+";"+aluno.getPeriodo()+";"+aluno.getCiclo()+"\n";
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
-		File arquivo = new File(path, nomeArquivo);
+		File arquivo = new File(pathData, nomeArquivo);
 		boolean exists = false;
 		boolean control = false;
 		if(arquivo.exists()) {
@@ -44,12 +43,13 @@ public class InserirAluno implements IInserirAluno{
 		if(!alunoExiste(arquivo, aluno)) {
 			print.write(conteudo);
 			print.flush();
+			JOptionPane.showMessageDialog(null, "Aluno gravado com sucesso.");
 		}
 		print.close();
 		escrita.close();
-		JOptionPane.showMessageDialog(null, "Aluno gravado com sucesso.");
 	}
 	
+//====================[ Verifica se um aluno já existe na lista ]===================//
 	private boolean alunoExiste(File arquivo, Aluno aluno) throws IOException {
 		FileInputStream fluxo = new FileInputStream(arquivo);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
