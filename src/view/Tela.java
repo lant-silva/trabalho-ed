@@ -38,6 +38,7 @@ import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+import control.ConsultaGrupos;
 import control.InserirAluno;
 import control.InserirGrupos;
 import model.Aluno;
@@ -76,8 +77,10 @@ public class Tela {
 
 	private InserirAluno ManterAlunos = new InserirAluno();
 	private InserirGrupos ManterGrupos = new InserirGrupos();
+	private ConsultaGrupos BuscarGrupos = new ConsultaGrupos();
 	
 	String[] alunosLista=null; //Tela Inserir Grupos: Implementação do comboBox de alunos
+	private JTextField codigoGrupoOrientacoes;
 	
 	/**
 	 * Launch the application.
@@ -332,10 +335,6 @@ public class Tela {
 		lblCdigoGrupo.setBounds(58, 40, 101, 15);
 		inserirOrientacoes.add(lblCdigoGrupo);
 		
-		JComboBox comboCodigoGrupo = new JComboBox();
-		comboCodigoGrupo.setBounds(188, 35, 148, 24);
-		inserirOrientacoes.add(comboCodigoGrupo);
-		
 		JLabel lblDataOrientao = new JLabel("Data Orientação");
 		lblDataOrientao.setBounds(58, 83, 117, 15);
 		inserirOrientacoes.add(lblDataOrientao);
@@ -420,6 +419,16 @@ public class Tela {
 		btnExcluir_1.setBounds(477, 409, 117, 25);
 		inserirOrientacoes.add(btnExcluir_1);
 		
+		codigoGrupoOrientacoes = new JTextField();
+		codigoGrupoOrientacoes.setBounds(186, 38, 114, 19);
+		inserirOrientacoes.add(codigoGrupoOrientacoes);
+		codigoGrupoOrientacoes.setColumns(10);
+		
+		JButton btnBuscar_3 = new JButton("Buscar");
+
+		btnBuscar_3.setBounds(312, 35, 117, 25);
+		inserirOrientacoes.add(btnBuscar_3);
+		
 		JPanel consultaGruposCodigo = new JPanel();
 		tabbedPane.addTab("Consulta de Grupos", (Icon) null, consultaGruposCodigo, null);
 		consultaGruposCodigo.setLayout(null);
@@ -434,6 +443,7 @@ public class Tela {
 		buscaCodigoGrupo.setColumns(10);
 		
 		JButton btnBuscar = new JButton("Buscar");
+
 		btnBuscar.setBounds(581, 71, 117, 25);
 		consultaGruposCodigo.add(btnBuscar);
 		
@@ -667,39 +677,7 @@ public class Tela {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String nomeaux = (String) listaAlunosTabela.getSelectedItem();
-				if(alunoT1.getAluno()=="") {
-						try {
-							alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-					}
-				}else if(alunoT2.getAluno()=="") {
-					if(verificarExistenteTabela(nomeaux)==false) {
-						try {
-							alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}else if(alunoT3.getAluno()==""){
-					if(verificarExistenteTabela(nomeaux)==false) {
-						try {
-							alunoT3 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}else if(alunoT4.getAluno()==""){
-					if(verificarExistenteTabela(nomeaux)==false) {
-						try {
-							alunoT4 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				}else {
-					JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");					
-				}
+				popularTabela(nomeaux);
 				montarTabela();	
 			}
 		});
@@ -747,6 +725,39 @@ public class Tela {
 				}
 			}
 		});
+		
+		btnBuscar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String cod = buscaCodigoGrupo.getText();
+				try {
+					String[] grupoValores = BuscarGrupos.BuscarGrupo(pathData, arquivoGrupos, cod);
+					montarTabelaGrupo(grupoValores);
+					nomeGrupo.setText(grupoValores[1]);nomeGrupo.setEnabled(true);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+		
+		btnBuscar_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String cod = codigoGrupoOrientacoes.getText();
+				try {
+					String[] aux = BuscarGrupos.BuscarGrupo(pathData, arquivoGrupos, cod);
+					if(aux[0]==cod) {
+						JOptionPane.showMessageDialog(null, "Grupo validado");
+					}
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 	}
 	
 	public void montarTabela() {
@@ -770,12 +781,67 @@ public class Tela {
 			});
 	}
 	
+	public void montarTabelaGrupo(String[] var) {
+		table_1.setModel(new DefaultTableModel(
+				new Object[][] {
+					{var[1], var[0], var[2]},
+				},
+				new String[] {
+					"Codigo Grupo", "Nome Grupo", "Tema"
+				}
+			) {
+				boolean[] columnEditables = new boolean[] {
+					false, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+	}
+	
 	public boolean verificarExistenteTabela(String aluno) {
 		if(aluno.equals(alunoT1.getAluno())||aluno.equals(alunoT2.getAluno())||aluno.equals(alunoT3.getAluno())||aluno.equals(alunoT4.getAluno())) {
 			JOptionPane.showMessageDialog(null, "O aluno já foi inserido no grupo atual");
 			return true;
 		}else {
 			return false;
+		}
+	}
+	
+	public void popularTabela(String nomeaux) {
+		
+		if(alunoT1.getAluno()=="") {
+				try {
+					alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+			}
+		}else if(alunoT2.getAluno()=="") {
+			if(verificarExistenteTabela(nomeaux)==false) {
+				try {
+					alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}else if(alunoT3.getAluno()==""){
+			if(verificarExistenteTabela(nomeaux)==false) {
+				try {
+					alunoT3 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}else if(alunoT4.getAluno()==""){
+			if(verificarExistenteTabela(nomeaux)==false) {
+				try {
+					alunoT4 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}else {
+			JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");					
 		}
 	}
 }
