@@ -16,15 +16,14 @@ public class InserirAluno implements IInserirAluno{
 	@Override
 	public void manterAluno(String pathData, String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
 		Aluno novo = new Aluno(aluno, ra, curso, periodo, ciclo);
-		
 		try {
 			inserir(pathData, arquivo, novo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
+//==================[ Insere um aluno no arquivo csv ]==========================//
 	private void inserir(String pathData, String nomeArquivo, Aluno aluno) throws Exception {
 		File dir = new File(pathData);
 		String conteudo = aluno.getAluno()+";"+aluno.getRa()+";"+aluno.getCurso()+";"+aluno.getPeriodo()+";"+aluno.getCiclo()+"\n";

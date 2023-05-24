@@ -2,10 +2,10 @@
  * Sistema de Gerenciamento de TCC - Trabalho Semestral de Estrutura de Dados ( 3º ADS Tarde ) 
  * Data de finalização: A ser determinada
  * 
- * 
- * 
- * 
- * 
+ * Estrutura do corpo: - Variaveis
+ * 					   - Corpo das telas
+ * 					   - Ações dos botões
+ * 					   - Métodos
  * 
  * 
  */
@@ -41,10 +41,15 @@ import javax.swing.table.DefaultTableModel;
 import control.ConsultaGrupos;
 import control.InserirAluno;
 import control.InserirGrupos;
+import control.InserirOrientacoes;
 import model.Aluno;
 
 public class Tela {
-
+	/*
+	 * Variaveis
+	 *
+	 */
+	
 	private JFrame frmSistemaDeGesto;
 	private JTextField nomeAluno;
 	private JTextField raAluno;
@@ -57,9 +62,7 @@ public class Tela {
 	private JTextField inserirCodigoGrupo;
 	private JTextField buscaCodigoGrupo;
 	private JTable table_1;
-	private JTextField txtDia;
-	private JTextField txtMes;
-	private JTextField txtAno;
+	private JTextField txtData;
 	private JTextField txtOrientacao;
 	private JTable table_2;
 	private JTextField textField_6;
@@ -74,16 +77,19 @@ public class Tela {
 	Aluno alunoT2=new Aluno("","","","",0);
 	Aluno alunoT3=new Aluno("","","","",0);
 	Aluno alunoT4=new Aluno("","","","",0);
+	
+	private boolean orientacaoValida = true;
 
 	private InserirAluno ManterAlunos = new InserirAluno();
 	private InserirGrupos ManterGrupos = new InserirGrupos();
+	private InserirOrientacoes ManterOrientacoes = new InserirOrientacoes(); 
 	private ConsultaGrupos BuscarGrupos = new ConsultaGrupos();
 	
 	String[] alunosLista=null; //Tela Inserir Grupos: Implementação do comboBox de alunos
 	private JTextField codigoGrupoOrientacoes;
 	
 	/**
-	 * Launch the application.
+	 * Main
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -194,7 +200,10 @@ public class Tela {
 		JLabel lblCclosemestre = new JLabel("Cíclo/Semestre:");
 		lblCclosemestre.setBounds(153, 277, 110, 15);
 		inserirAluno.add(lblCclosemestre);
+//====================================================================================================================//		
+		
 
+//===================[ Tela Inserir Grupos ]==========================================================================//
 		JPanel inserirGrupos = new JPanel();
 		tabbedPane.addTab("Inserir Grupos", null, inserirGrupos, null);
 		inserirGrupos.setLayout(null);
@@ -235,14 +244,13 @@ public class Tela {
 		inserirGrupos.add(btnInserirGrupo);
 		
 		JButton btnEditar = new JButton("Editar");
-		btnEditar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+
+
 		btnEditar.setBounds(278, 409, 117, 25);
 		inserirGrupos.add(btnEditar);
 		
 		JButton btnExcluir = new JButton("Excluir");
+
 		btnExcluir.setBounds(407, 409, 117, 25);
 		inserirGrupos.add(btnExcluir);
 		
@@ -339,28 +347,10 @@ public class Tela {
 		lblDataOrientao.setBounds(58, 83, 117, 15);
 		inserirOrientacoes.add(lblDataOrientao);
 		
-		txtDia = new JTextField();
-		txtDia.setBounds(188, 81, 39, 19);
-		inserirOrientacoes.add(txtDia);
-		txtDia.setColumns(10);
-		
-		JLabel label = new JLabel("/");
-		label.setBounds(228, 83, 11, 15);
-		inserirOrientacoes.add(label);
-		
-		txtMes = new JTextField();
-		txtMes.setColumns(10);
-		txtMes.setBounds(238, 81, 39, 19);
-		inserirOrientacoes.add(txtMes);
-		
-		JLabel label_1 = new JLabel("/");
-		label_1.setBounds(278, 83, 11, 15);
-		inserirOrientacoes.add(label_1);
-		
-		txtAno = new JTextField();
-		txtAno.setColumns(10);
-		txtAno.setBounds(289, 81, 47, 19);
-		inserirOrientacoes.add(txtAno);
+		txtData = new JTextField();
+		txtData.setBounds(188, 81, 112, 19);
+		inserirOrientacoes.add(txtData);
+		txtData.setColumns(10);
 		
 		JLabel lblNovaOrientao = new JLabel("Nova Orientação:");
 		lblNovaOrientao.setBounds(58, 127, 123, 15);
@@ -407,9 +397,10 @@ public class Tela {
 		table_2.setBounds(81, 324, 630, 32);
 		inserirOrientacoes.add(table_2);
 		
-		JButton btnNewButton = new JButton("Inserir Orientação");
-		btnNewButton.setBounds(167, 409, 169, 25);
-		inserirOrientacoes.add(btnNewButton);
+		JButton inserirOrientacao = new JButton("Inserir Orientação");
+
+		inserirOrientacao.setBounds(167, 409, 169, 25);
+		inserirOrientacoes.add(inserirOrientacao);
 		
 		JButton btnEditar_1 = new JButton("Editar");
 		btnEditar_1.setBounds(348, 409, 117, 25);
@@ -748,12 +739,71 @@ public class Tela {
 				String cod = codigoGrupoOrientacoes.getText();
 				try {
 					String[] aux = BuscarGrupos.BuscarGrupo(pathData, arquivoGrupos, cod);
-					if(aux[0]==cod) {
-						JOptionPane.showMessageDialog(null, "Grupo validado");
+					if(!aux[0].equals(cod)){
+						orientacaoValida = false;
+					}else {
+						orientacaoValida = true;
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				}
+			}
+		});
+		
+		inserirOrientacao.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String cod = codigoGrupoOrientacoes.getText();
+				String data = txtData.getText();
+				String nome = txtOrientacao.getText();
+				String descricao = descricaoOrientacao.getText();
+				if(!orientacaoValida) {	
+					JOptionPane.showMessageDialog(null, "O grupo especificado não existe");
+				}else {
+					try {
+						ManterOrientacoes.manterOrientacoes(pathData, arquivoGrupos, cod, data, nome, descricao);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Aluno[] grupo = {alunoT1,alunoT2,alunoT3,alunoT4};
+				String codigoG = inserirCodigoGrupo.getText();
+				String tema = inserirTemaGrupo.getText();
+				String nomeG = inserirNomeGrupo.getText();
+				String area = (String) comboAreaInserir.getSelectedItem();
+				String subarea = (String) comboSubareaInserir.getSelectedItem();
+				try {
+					ManterGrupos.editarGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		});
+		
+		btnExcluir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Aluno[] grupo = {alunoT1,alunoT2,alunoT3,alunoT4};
+				String codigoG = inserirCodigoGrupo.getText();
+				String tema = inserirTemaGrupo.getText();
+				String nomeG = inserirNomeGrupo.getText();
+				String area = (String) comboAreaInserir.getSelectedItem();
+				String subarea = (String) comboSubareaInserir.getSelectedItem();
+				try {
+					ManterGrupos.excluirGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+				} catch (Exception e2) {
+					e2.printStackTrace();
 				}
 			}
 		});
