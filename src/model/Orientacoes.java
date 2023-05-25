@@ -5,6 +5,7 @@ public class Orientacoes {
 	String descricao;
 	Date data;
 	String codigo;
+	
 	public Orientacoes(String nome, String descricao, Date data, String codigo) {
 		super();
 		this.nome = nome;

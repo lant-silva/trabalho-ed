@@ -3,6 +3,7 @@ package control;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
@@ -12,6 +13,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import model.Aluno;
@@ -121,6 +124,7 @@ public class InserirGrupos implements IInserirGrupos{
 		FileWriter escrita = new FileWriter(arquivoTemp, exists);
 		PrintWriter print = new PrintWriter(escrita);
 	
+		
 		String linha = buffer.readLine();
 		while(linha!=null) {
 			String[] aux = linha.split(";");
@@ -242,5 +246,47 @@ public class InserirGrupos implements IInserirGrupos{
 		return false;
 	}
 
+	public String[] popularAreas(String pathData) throws Exception {
+		String nome = "lista-areas.csv";
+		File arquivo = new File(pathData, nome);
+		
+		FileInputStream fluxo = new FileInputStream(arquivo);
+		InputStreamReader leitor = new InputStreamReader(fluxo);
+		BufferedReader buffer = new BufferedReader(leitor);
+		String linha = buffer.readLine();
+		String itens = "";
+		while(linha!=null) {
+			String[] aux = linha.split(";");
+			itens = itens + aux[0]+";";
+			linha = buffer.readLine();
+		}
+		String[] areas = itens.split(";");
+		buffer.close();
+		return areas;
+	}
+	
+	public String[] popularSubareas(String pathData, String areaAtual) throws Exception{
+		String nome = "lista-areas.csv";
+		File arquivo = new File(pathData, nome);
+		
+		FileInputStream fluxo = new FileInputStream(arquivo);
+		InputStreamReader leitor = new InputStreamReader(fluxo);
+		BufferedReader buffer = new BufferedReader(leitor);
+		String linha = buffer.readLine();
+		String itens = "";
+		while(linha!=null) {
+			String[] aux = linha.split(";");
+			if(areaAtual.equals(aux[0])) {
+				int tamanho = aux.length;
+				for(int i=1;i<tamanho;i++) {
+					itens += aux[i]+";";
+				}
+			}
+			linha = buffer.readLine();
+		}
+		String[] areas = itens.split(";");
+		buffer.close();
+		return areas;
+	}
 
 }

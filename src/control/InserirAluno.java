@@ -17,7 +17,9 @@ public class InserirAluno implements IInserirAluno{
 	public void manterAluno(String pathData, String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
 		Aluno novo = new Aluno(aluno, ra, curso, periodo, ciclo);
 		try {
-			inserir(pathData, arquivo, novo);
+			if(!validar(novo)) {				
+				inserir(pathData, arquivo, novo);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -66,5 +68,17 @@ public class InserirAluno implements IInserirAluno{
 		leitor.close();
 		fluxo.close();
 		return false;
+	}
+	
+	private boolean validar(Aluno aluno) {
+		boolean control=false;
+		if(aluno.getAluno().equals("")) {
+			JOptionPane.showMessageDialog(null, "Insira o nome do aluno");
+			control=true;
+		}else if(aluno.getRa().equals("")) {
+			JOptionPane.showMessageDialog(null, "Insira o RA do aluno");
+			control=true;
+		}
+		return control;
 	}
 }

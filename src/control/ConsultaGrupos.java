@@ -12,6 +12,7 @@ public class ConsultaGrupos implements IConsultaGrupos{
 
 	@Override
 	public String[] BuscarGrupo(String pathData, String arquivoGrupos, String codigo) throws Exception {
+		
 		String[] aux = new String[3];
 		File arquivo = new File(pathData, arquivoGrupos);
 		FileInputStream fluxo = new FileInputStream(arquivo);

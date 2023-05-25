@@ -43,6 +43,8 @@ import control.InserirAluno;
 import control.InserirGrupos;
 import control.InserirOrientacoes;
 import model.Aluno;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class Tela {
 	/*
@@ -209,6 +211,7 @@ public class Tela {
 		inserirGrupos.setLayout(null);
 		
 		JComboBox listaAlunosTabela = new JComboBox();
+
 		try {
 			alunosLista = ManterGrupos.popularListaAlunos(pathData, arquivoAlunos);
 			listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
@@ -323,12 +326,30 @@ public class Tela {
 		inserirGrupos.add(lblSubrea);
 		
 		JComboBox comboAreaInserir = new JComboBox();
+
 		comboAreaInserir.setBounds(188, 228, 245, 24);
 		inserirGrupos.add(comboAreaInserir);
+		try {
+			String[] areas = ManterGrupos.popularAreas(pathData);
+			comboAreaInserir.setModel(new DefaultComboBoxModel(areas));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		
 		JComboBox comboSubareaInserir = new JComboBox();
 		comboSubareaInserir.setBounds(580, 228, 219, 24);
 		inserirGrupos.add(comboSubareaInserir);
+		String areaAtual = (String) comboAreaInserir.getSelectedItem();
+		String[] subareas=null;
+		try {
+			subareas = ManterGrupos.popularSubareas(pathData, areaAtual);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		comboSubareaInserir.setModel(new DefaultComboBoxModel(subareas));
 		
 		JButton btnLimparCampos = new JButton("Limpar Campos");
 
@@ -733,6 +754,19 @@ public class Tela {
 			}
 		});
 		
+		comboAreaInserir.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				String areaAtual = (String) comboAreaInserir.getSelectedItem();
+				try {
+					String[] subareas = ManterGrupos.popularSubareas(pathData, areaAtual);
+					comboSubareaInserir.setModel(new DefaultComboBoxModel(subareas));
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
 		btnBuscar_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -806,10 +840,10 @@ public class Tela {
 					e2.printStackTrace();
 				}
 			}
-		});
-		
+		});	
 	}
 	
+
 	public void montarTabela() {
 		tabelaAlunos.setModel(new DefaultTableModel(
 				new Object[][] {
@@ -847,6 +881,8 @@ public class Tela {
 					return columnEditables[column];
 				}
 			});
+		
+		
 	}
 	
 	public boolean verificarExistenteTabela(String aluno) {
@@ -891,7 +927,8 @@ public class Tela {
 				}
 			}
 		}else {
-			JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");					
+			JOptionPane.showMessageDialog(null, "O grupo já atingiu o número máximo de participantes");				
+			
 		}
 	}
 }
