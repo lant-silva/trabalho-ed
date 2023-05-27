@@ -2,19 +2,25 @@
  * Sistema de Gerenciamento de TCC - Trabalho Semestral de Estrutura de Dados ( 3º ADS Tarde ) 
  * Data de finalização: A ser determinada
  * 
+ * Integrantes: Luiz Antonio da Silva Cruz
+ * 				Jonathan de Oliveira Custódio
+ * 				Natan Esposito
+ * 				Davi de Queiroz Romão
+ * 
  * Estrutura do corpo: - Variaveis
  * 					   - Corpo das telas
  * 					   - Ações dos botões
  * 					   - Métodos
  * 
+ * Informações sobre a diagramação do projeto estão disponíveis no repositório
  * 
  */
 
 package view;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -43,8 +49,7 @@ import control.InserirAluno;
 import control.InserirGrupos;
 import control.InserirOrientacoes;
 import model.Aluno;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
+import model.Pilha;
 
 public class Tela {
 	/*
@@ -55,9 +60,6 @@ public class Tela {
 	private JFrame frmSistemaDeGesto;
 	private JTextField nomeAluno;
 	private JTextField raAluno;
-	private static final String pathData = System.getProperty("user.dir")+File.separator+"data";
-	private static final String arquivoAlunos = "lista-alunos.csv";
-	private static final String arquivoGrupos = "lista-grupos.csv";
 	private JTable tabelaAlunos;
 	private JTextField inserirNomeGrupo;
 	private JTextField inserirTemaGrupo;
@@ -74,6 +76,11 @@ public class Tela {
 	private JTextField textField_9;
 	private JTable table_4;
 	private JTextField nomeGrupo;
+
+	private static final String pathData = System.getProperty("user.dir")+File.separator+"data";
+	private static final String arquivoAlunos = "lista-alunos.csv";
+	private static final String arquivoGrupos = "lista-grupos.csv";
+	private static final String arquivoOrientacoes = "lista-orientacoes.csv";
 	
 	Aluno alunoT1=new Aluno("","","","",0);
 	Aluno alunoT2=new Aluno("","","","",0);
@@ -81,6 +88,8 @@ public class Tela {
 	Aluno alunoT4=new Aluno("","","","",0);
 	
 	private boolean orientacaoValida = true;
+	
+	private Pilha orientacoes;
 
 	private InserirAluno ManterAlunos = new InserirAluno();
 	private InserirGrupos ManterGrupos = new InserirGrupos();
@@ -372,7 +381,7 @@ public class Tela {
 		txtData.setBounds(188, 81, 112, 19);
 		inserirOrientacoes.add(txtData);
 		txtData.setColumns(10);
-		
+
 		JLabel lblNovaOrientao = new JLabel("Nova Orientação:");
 		lblNovaOrientao.setBounds(58, 127, 123, 15);
 		inserirOrientacoes.add(lblNovaOrientao);
@@ -507,9 +516,10 @@ public class Tela {
 		consultarUltimaOrientacao.add(textField_6);
 		textField_6.setColumns(10);
 		
-		JButton btnBuscar_1 = new JButton("Buscar");
-		btnBuscar_1.setBounds(536, 50, 117, 25);
-		consultarUltimaOrientacao.add(btnBuscar_1);
+		JButton btnBuscarOrientacao = new JButton("Buscar");
+
+		btnBuscarOrientacao.setBounds(536, 50, 117, 25);
+		consultarUltimaOrientacao.add(btnBuscarOrientacao);
 		
 		JLabel lblDataOrientao_1 = new JLabel("Data Orientação");
 		lblDataOrientao_1.setBounds(61, 108, 124, 15);
@@ -805,6 +815,39 @@ public class Tela {
 			}
 		});
 		
+		txtData.addKeyListener(new KeyAdapter(){
+			@Override
+			public void keyPressed(KeyEvent e) {
+				char c = e.getKeyChar();
+		        if (!Character.isLetter(c) || Character.isWhitespace(c) || Character.isISOControl(c))
+		        {
+		            txtData.setEditable(true);
+		        }
+		        else
+		        {
+		            txtData.setEditable(false);
+		            return;
+		        }
+				String texto = txtData.getText();
+				int keyCode = e.getKeyCode();
+				
+		        if (txtData.getText().length() >= 10)
+		        {
+		            txtData.setEditable(false);
+		        }
+		        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+		        {
+		            txtData.setEditable(true);
+		        }
+		        if ((texto.length() == 2 || texto.length() == 5) && !texto.endsWith("/")) {
+		            txtData.setText(texto + "/");
+		        }
+		        if (keyCode == KeyEvent.VK_BACK_SPACE && (texto.length() == 3 || texto.length() == 6)) {
+		            txtData.setText(texto.substring(0, texto.length() - 1));
+		        }
+			}
+		});
+		
 		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -841,6 +884,17 @@ public class Tela {
 				}
 			}
 		});	
+		
+		btnBuscarOrientacao.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				
+				
+				
+				
+			}
+		});
 	}
 	
 

@@ -4,14 +4,14 @@ public class Orientacoes {
 	String nome;
 	String descricao;
 	Date data;
-	String codigo;
+	String codigoGrupo;
 	
-	public Orientacoes(String nome, String descricao, Date data, String codigo) {
+	public Orientacoes(String nome, String descricao, Date data, String codigoGrupo) {
 		super();
 		this.nome = nome;
 		this.descricao = descricao;
 		this.data = data;
-		this.codigo = codigo;
+		this.codigoGrupo = codigoGrupo;
 	}
 	public String getNome() {
 		return nome;
@@ -31,10 +31,10 @@ public class Orientacoes {
 	public void setData(Date data) {
 		this.data = data;
 	}
-	public String getCodigo() {
-		return codigo;
+	public String getCodigoGrupo() {
+		return codigoGrupo;
 	}
-	public void setCodigo(String codigo) {
-		this.codigo = codigo;
+	public void setCodigoGrupo(String codigoGrupo) {
+		this.codigoGrupo = codigoGrupo;
 	}
 }
