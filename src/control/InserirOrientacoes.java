@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
+import model.Arquivos;
+
 public class InserirOrientacoes implements IInserirOrientacoes{
 	
 	/*
@@ -16,14 +18,12 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 	 */
 	
 	@Override
-	public void manterOrientacoes(String pathData, String arquivoGrupos, String codigo, String data, String nome, String descricao) throws Exception {
+	public void manterOrientacoes(String codigo, String data, String nome, String descricao) throws Exception {
 		
-		if(!validar(codigo, data, nome, descricao)) {
-			data = formatarData(data);
-			File arquivo = new File(pathData, arquivoGrupos);
+			File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 			boolean exists = false;
-			File arqOrientacao = new File(pathData, "lista-orientacoes.csv");
-			if(arqOrientacao.exists() && arqOrientacao.isFile()) {
+			File arqOrientacao = new File(Arquivos.pathData, Arquivos.arquivoOrientacoes);
+			if(arqOrientacao.exists()) {
 				exists = true;
 			}
 			FileInputStream fluxo = new FileInputStream(arquivo);
@@ -41,22 +41,35 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 			
 			FileWriter escrita = new FileWriter(arqOrientacao, exists);
 			PrintWriter print = new PrintWriter(escrita);
-			print.write(conteudo);
-			print.flush();
-			JOptionPane.showMessageDialog(null, "Orientação inserida.");
+			if(validar(codigo, data, nome, descricao)) {
+				print.write(conteudo);
+				print.flush();
+				JOptionPane.showMessageDialog(null, "Orientação inserida.");				
+			}
 			print.close();
 			escrita.close();
 			buffer.close();
 			leitor.close();
 			fluxo.close();
-		}
 	}
 	
 	private boolean validar(String codigo, String data, String nome, String descricao) {
-		boolean control=false;
+		boolean control=true;
 		if(codigo==""||data==""||nome==""||descricao=="") {
 			JOptionPane.showMessageDialog(null, "Campos vazios, insira todas as informações necessarias");
-			control=true;
+			control=false;
+		}
+		
+		data = data.replaceAll("[^0-9]", "");
+		if(data.length()<8) {
+			JOptionPane.showMessageDialog(null, "Data inválida, inserir no formato correto: (dd/mm/aaaa)");
+			control=false;
+		}else if(data.length()==8) {
+			data = formatarData(data);
+			if(data.length()<8) {
+				JOptionPane.showMessageDialog(null, "Data inexistente");
+				control=false;
+			}
 		}
 		return control;
 	}
@@ -68,7 +81,6 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 	 */
 
 	private String formatarData(String data) {	
-		data = data.replaceAll("[^0-9]", "");
 		int dia = Integer.parseInt(data.substring(0 ,2));
 		int mes = Integer.parseInt(data.substring(2, 4));
 		int ano = Integer.parseInt(data.substring(4, 8));
@@ -76,7 +88,7 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 			String formatar = data.substring(0, 2)+"/"+data.substring(2, 4)+"/"+data.substring(4, 8);
 			data = formatar;
 		}else {
-			JOptionPane.showMessageDialog(null, "Data inválida, inserir no formato correto: (dd/mm/aaaa");
+			return "";
 		}
 		return data;
 	}

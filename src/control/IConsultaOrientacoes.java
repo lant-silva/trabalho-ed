@@ -1,5 +1,7 @@
 package control;
 
+import model.Pilha;
+
 public interface IConsultaOrientacoes {
-	public void consultarOrientacao(String pathData, String arquivoOrientacoes, String codigo)throws Exception;
+	public Pilha consultarOrientacao(String codigo)throws Exception;
 }

@@ -11,14 +11,15 @@ import java.io.PrintWriter;
 import javax.swing.JOptionPane;
 
 import model.Aluno;
+import model.Arquivos;
 
 public class InserirAluno implements IInserirAluno{
 	@Override
-	public void manterAluno(String pathData, String arquivo, String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
+	public void manterAluno(String aluno, String ra, String curso, String periodo, int ciclo) throws Exception {
 		Aluno novo = new Aluno(aluno, ra, curso, periodo, ciclo);
 		try {
 			if(!validar(novo)) {				
-				inserir(pathData, arquivo, novo);
+				inserir(novo);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -26,13 +27,13 @@ public class InserirAluno implements IInserirAluno{
 	}
 	
 //==================[ Insere um aluno no arquivo csv ]==========================//
-	private void inserir(String pathData, String nomeArquivo, Aluno aluno) throws Exception {
-		File dir = new File(pathData);
+	private void inserir(Aluno aluno) throws Exception {
+		File dir = new File(Arquivos.pathData);
 		String conteudo = aluno.getAluno()+";"+aluno.getRa()+";"+aluno.getCurso()+";"+aluno.getPeriodo()+";"+aluno.getCiclo()+"\n";
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
-		File arquivo = new File(pathData, nomeArquivo);
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoAlunos);
 		boolean exists = false;
 		boolean control = false;
 		if(arquivo.exists()) {
@@ -58,7 +59,7 @@ public class InserirAluno implements IInserirAluno{
 		String linha = buffer.readLine();
 		while(linha!=null) {
 			String[] linhaSeparada = linha.split(";");
-			if(aluno.getRa().contains(linhaSeparada[1])) {
+			if(aluno.getRa().equals(linhaSeparada[1])) {
 				JOptionPane.showMessageDialog(null, "O aluno especificado já existe no sistema.");
 				return true;
 			}

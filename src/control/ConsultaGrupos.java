@@ -7,14 +7,16 @@ import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
+import model.Arquivos;
+
 
 public class ConsultaGrupos implements IConsultaGrupos{
 
 	@Override
-	public String[] BuscarGrupo(String pathData, String arquivoGrupos, String codigo) throws Exception {
+	public String[] BuscarGrupo(String codigo) throws Exception {
 		
 		String[] aux = new String[3];
-		File arquivo = new File(pathData, arquivoGrupos);
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 		FileInputStream fluxo = new FileInputStream(arquivo);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
 		BufferedReader buffer = new BufferedReader(leitor);
@@ -33,6 +35,7 @@ public class ConsultaGrupos implements IConsultaGrupos{
 		fluxo.close();
 		
 		if(controle==true) {
+			JOptionPane.showMessageDialog(null, "Grupo encontrado com sucesso");
 			return aux;
 		}else {
 			JOptionPane.showMessageDialog(null, "Grupo não encontrado");

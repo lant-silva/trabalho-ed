@@ -25,7 +25,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -45,10 +44,12 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
 import control.ConsultaGrupos;
+import control.ConsultaOrientacoes;
 import control.InserirAluno;
 import control.InserirGrupos;
 import control.InserirOrientacoes;
 import model.Aluno;
+import model.Orientacoes;
 import model.Pilha;
 
 public class Tela {
@@ -69,18 +70,13 @@ public class Tela {
 	private JTextField txtData;
 	private JTextField txtOrientacao;
 	private JTable table_2;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTable table_3;
+	private JTextField inserirCodigoBuscaOrientacao;
+	private JTextField dataOrientacao;
+	private JTextField nomeOrientacao;
+	private JTable tabelaUltimaOrientacao;
 	private JTextField textField_9;
 	private JTable table_4;
 	private JTextField nomeGrupo;
-
-	private static final String pathData = System.getProperty("user.dir")+File.separator+"data";
-	private static final String arquivoAlunos = "lista-alunos.csv";
-	private static final String arquivoGrupos = "lista-grupos.csv";
-	private static final String arquivoOrientacoes = "lista-orientacoes.csv";
 	
 	Aluno alunoT1=new Aluno("","","","",0);
 	Aluno alunoT2=new Aluno("","","","",0);
@@ -95,6 +91,7 @@ public class Tela {
 	private InserirGrupos ManterGrupos = new InserirGrupos();
 	private InserirOrientacoes ManterOrientacoes = new InserirOrientacoes(); 
 	private ConsultaGrupos BuscarGrupos = new ConsultaGrupos();
+	private ConsultaOrientacoes ConsultarUltimaOrientacao = new ConsultaOrientacoes();
 	
 	String[] alunosLista=null; //Tela Inserir Grupos: Implementação do comboBox de alunos
 	private JTextField codigoGrupoOrientacoes;
@@ -222,7 +219,7 @@ public class Tela {
 		JComboBox listaAlunosTabela = new JComboBox();
 
 		try {
-			alunosLista = ManterGrupos.popularListaAlunos(pathData, arquivoAlunos);
+			alunosLista = ManterGrupos.popularListaAlunos();
 			listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
 			listaAlunosTabela.setMaximumRowCount(999);
 		} catch (Exception e1) {
@@ -245,7 +242,7 @@ public class Tela {
 		
 		String raSelecionado = (String) listaAlunosTabela.getSelectedItem();
 		try {
-			textPane.setText(ManterGrupos.popularRa(pathData, arquivoAlunos, raSelecionado));
+			textPane.setText(ManterGrupos.popularRa(raSelecionado));
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -339,7 +336,7 @@ public class Tela {
 		comboAreaInserir.setBounds(188, 228, 245, 24);
 		inserirGrupos.add(comboAreaInserir);
 		try {
-			String[] areas = ManterGrupos.popularAreas(pathData);
+			String[] areas = ManterGrupos.popularAreas();
 			comboAreaInserir.setModel(new DefaultComboBoxModel(areas));
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -353,7 +350,7 @@ public class Tela {
 		String areaAtual = (String) comboAreaInserir.getSelectedItem();
 		String[] subareas=null;
 		try {
-			subareas = ManterGrupos.popularSubareas(pathData, areaAtual);
+			subareas = ManterGrupos.popularSubareas(areaAtual);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -511,10 +508,10 @@ public class Tela {
 		lblNewLabel.setBounds(61, 55, 194, 15);
 		consultarUltimaOrientacao.add(lblNewLabel);
 		
-		textField_6 = new JTextField();
-		textField_6.setBounds(273, 53, 249, 19);
-		consultarUltimaOrientacao.add(textField_6);
-		textField_6.setColumns(10);
+		inserirCodigoBuscaOrientacao = new JTextField();
+		inserirCodigoBuscaOrientacao.setBounds(273, 53, 249, 19);
+		consultarUltimaOrientacao.add(inserirCodigoBuscaOrientacao);
+		inserirCodigoBuscaOrientacao.setColumns(10);
 		
 		JButton btnBuscarOrientacao = new JButton("Buscar");
 
@@ -525,17 +522,17 @@ public class Tela {
 		lblDataOrientao_1.setBounds(61, 108, 124, 15);
 		consultarUltimaOrientacao.add(lblDataOrientao_1);
 		
-		textField_7 = new JTextField();
-		textField_7.setEditable(false);
-		textField_7.setBounds(273, 106, 249, 19);
-		consultarUltimaOrientacao.add(textField_7);
-		textField_7.setColumns(10);
+		dataOrientacao = new JTextField();
+		dataOrientacao.setEditable(false);
+		dataOrientacao.setBounds(273, 106, 249, 19);
+		consultarUltimaOrientacao.add(dataOrientacao);
+		dataOrientacao.setColumns(10);
 		
-		textField_8 = new JTextField();
-		textField_8.setEditable(false);
-		textField_8.setBounds(273, 164, 249, 19);
-		consultarUltimaOrientacao.add(textField_8);
-		textField_8.setColumns(10);
+		nomeOrientacao = new JTextField();
+		nomeOrientacao.setEditable(false);
+		nomeOrientacao.setBounds(273, 164, 249, 19);
+		consultarUltimaOrientacao.add(nomeOrientacao);
+		nomeOrientacao.setColumns(10);
 		
 		JLabel lblNomeOrientao = new JLabel("Nome Orientação:");
 		lblNomeOrientao.setBounds(61, 166, 137, 15);
@@ -545,9 +542,9 @@ public class Tela {
 		scrollPane_3.setBounds(97, 234, 556, 135);
 		consultarUltimaOrientacao.add(scrollPane_3);
 		
-		table_3 = new JTable();
-		scrollPane_3.setViewportView(table_3);
-		table_3.setModel(new DefaultTableModel(
+		tabelaUltimaOrientacao = new JTable();
+		scrollPane_3.setViewportView(tabelaUltimaOrientacao);
+		tabelaUltimaOrientacao.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"", "", ""},
 				{null, null, null},
@@ -587,9 +584,9 @@ public class Tela {
 				return columnEditables[column];
 			}
 		});
-		table_3.getColumnModel().getColumn(0).setPreferredWidth(104);
-		table_3.getColumnModel().getColumn(1).setPreferredWidth(129);
-		table_3.getColumnModel().getColumn(2).setPreferredWidth(366);
+		tabelaUltimaOrientacao.getColumnModel().getColumn(0).setPreferredWidth(104);
+		tabelaUltimaOrientacao.getColumnModel().getColumn(1).setPreferredWidth(129);
+		tabelaUltimaOrientacao.getColumnModel().getColumn(2).setPreferredWidth(366);
 		
 		JPanel consultarSubarea = new JPanel();
 		tabbedPane.addTab("Consultar por Sub-área", null, consultarSubarea, null);
@@ -684,8 +681,8 @@ public class Tela {
 				semestre = semestre.substring(0,1);
 				int ciclo = Integer.parseInt(semestre);
 				try {
-					ManterAlunos.manterAluno(pathData, arquivoAlunos, nome, ra, curso, periodo, ciclo);
-					alunosLista = ManterGrupos.popularListaAlunos(pathData, arquivoAlunos);
+					ManterAlunos.manterAluno(nome, ra, curso, periodo, ciclo);
+					alunosLista = ManterGrupos.popularListaAlunos();
 					listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -708,7 +705,7 @@ public class Tela {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					textPane.setText(ManterGrupos.popularRa(pathData, arquivoAlunos, raSelecionado));
+					textPane.setText(ManterGrupos.popularRa(raSelecionado));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -741,7 +738,7 @@ public class Tela {
 				String area = (String) comboAreaInserir.getSelectedItem();
 				String subarea = (String) comboSubareaInserir.getSelectedItem();
 				try {
-					ManterGrupos.inserirGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+					ManterGrupos.inserirGrupos(grupo, codigoG, tema, nomeG, area, subarea);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -753,9 +750,11 @@ public class Tela {
 			public void mouseClicked(MouseEvent e) {
 				String cod = buscaCodigoGrupo.getText();
 				try {
-					String[] grupoValores = BuscarGrupos.BuscarGrupo(pathData, arquivoGrupos, cod);
-					montarTabelaGrupo(grupoValores);
-					nomeGrupo.setText(grupoValores[1]);nomeGrupo.setEnabled(true);
+					String[] grupoValores = BuscarGrupos.BuscarGrupo(cod);
+					if(grupoValores!=null) {						
+						montarTabelaGrupo(grupoValores);
+						nomeGrupo.setText(grupoValores[1]);nomeGrupo.setEnabled(true);
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -768,7 +767,7 @@ public class Tela {
 			public void itemStateChanged(ItemEvent e) {
 				String areaAtual = (String) comboAreaInserir.getSelectedItem();
 				try {
-					String[] subareas = ManterGrupos.popularSubareas(pathData, areaAtual);
+					String[] subareas = ManterGrupos.popularSubareas(areaAtual);
 					comboSubareaInserir.setModel(new DefaultComboBoxModel(subareas));
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -782,11 +781,13 @@ public class Tela {
 			public void mouseClicked(MouseEvent e) {
 				String cod = codigoGrupoOrientacoes.getText();
 				try {
-					String[] aux = BuscarGrupos.BuscarGrupo(pathData, arquivoGrupos, cod);
-					if(!aux[0].equals(cod)){
-						orientacaoValida = false;
-					}else {
-						orientacaoValida = true;
+					String[] aux = BuscarGrupos.BuscarGrupo(cod);
+					if(aux!=null) {
+						if(!aux[0].equals(cod)){
+							orientacaoValida = false;
+						}else {
+							orientacaoValida = true;
+						}
 					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -806,7 +807,7 @@ public class Tela {
 					JOptionPane.showMessageDialog(null, "O grupo especificado não existe");
 				}else {
 					try {
-						ManterOrientacoes.manterOrientacoes(pathData, arquivoGrupos, cod, data, nome, descricao);
+						ManterOrientacoes.manterOrientacoes(cod, data, nome, descricao);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -858,7 +859,7 @@ public class Tela {
 				String area = (String) comboAreaInserir.getSelectedItem();
 				String subarea = (String) comboSubareaInserir.getSelectedItem();
 				try {
-					ManterGrupos.editarGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+					ManterGrupos.editarGrupos(grupo, codigoG, tema, nomeG, area, subarea);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -878,7 +879,7 @@ public class Tela {
 				String area = (String) comboAreaInserir.getSelectedItem();
 				String subarea = (String) comboSubareaInserir.getSelectedItem();
 				try {
-					ManterGrupos.excluirGrupos(arquivoGrupos, pathData, grupo, codigoG, tema, nomeG, area, subarea);
+					ManterGrupos.excluirGrupos(grupo, codigoG, tema, nomeG, area, subarea);
 				} catch (Exception e2) {
 					e2.printStackTrace();
 				}
@@ -888,11 +889,17 @@ public class Tela {
 		btnBuscarOrientacao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				
-				
-				
-				
+				try {
+					orientacoes = ConsultarUltimaOrientacao.consultarOrientacao(inserirCodigoBuscaOrientacao.getText().toString());
+					Orientacoes aux = (Orientacoes) orientacoes.pop();
+					dataOrientacao.setText(aux.getData());
+					nomeOrientacao.setText(aux.getNome());
+					String[][] mostrarUltimaOrientacao = {{aux.getCodigoGrupo(), aux.getData(), aux.getNome()}};
+					montarTabelaOrientacao(mostrarUltimaOrientacao);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
@@ -939,6 +946,28 @@ public class Tela {
 		
 	}
 	
+	public void montarTabelaOrientacao(String[][] orientacao) {
+		tabelaUltimaOrientacao.setModel(new DefaultTableModel(
+				orientacao,
+				new String[] {
+					"Codigo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
+				}
+			) {
+				Class[] columnTypes = new Class[] {
+					String.class, String.class, String.class
+				};
+				public Class getColumnClass(int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+				boolean[] columnEditables = new boolean[] {
+					false, false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+	}
+	
 	public boolean verificarExistenteTabela(String aluno) {
 		if(aluno.equals(alunoT1.getAluno())||aluno.equals(alunoT2.getAluno())||aluno.equals(alunoT3.getAluno())||aluno.equals(alunoT4.getAluno())) {
 			JOptionPane.showMessageDialog(null, "O aluno já foi inserido no grupo atual");
@@ -952,14 +981,14 @@ public class Tela {
 		
 		if(alunoT1.getAluno()=="") {
 				try {
-					alunoT1 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					alunoT1 = ManterGrupos.popularTabelaInserirGrupo(nomeaux);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 			}
 		}else if(alunoT2.getAluno()=="") {
 			if(verificarExistenteTabela(nomeaux)==false) {
 				try {
-					alunoT2 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					alunoT2 = ManterGrupos.popularTabelaInserirGrupo(nomeaux);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -967,7 +996,7 @@ public class Tela {
 		}else if(alunoT3.getAluno()==""){
 			if(verificarExistenteTabela(nomeaux)==false) {
 				try {
-					alunoT3 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					alunoT3 = ManterGrupos.popularTabelaInserirGrupo(nomeaux);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -975,7 +1004,7 @@ public class Tela {
 		}else if(alunoT4.getAluno()==""){
 			if(verificarExistenteTabela(nomeaux)==false) {
 				try {
-					alunoT4 = ManterGrupos.popularTabelaInserirGrupo(arquivoAlunos, nomeaux);
+					alunoT4 = ManterGrupos.popularTabelaInserirGrupo(nomeaux);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}

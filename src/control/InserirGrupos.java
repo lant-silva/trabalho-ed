@@ -3,38 +3,31 @@ package control;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 
 import model.Aluno;
+import model.Arquivos;
 import model.Grupo;
-import model.Lista;
+import model.ListaObject;
 
 public class InserirGrupos implements IInserirGrupos{
 	String[] alunos;
 	
 	@Override
-	public String[] popularListaAlunos(String pathData, String nomeArquivo)throws Exception{
+	public String[] popularListaAlunos()throws Exception{
 		
-		File listaAlunos = new File(pathData, nomeArquivo);
+		File listaAlunos = new File(Arquivos.pathData, Arquivos.arquivoAlunos);
 		
 		FileInputStream fluxo = new FileInputStream(listaAlunos);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
 		BufferedReader buffer = new BufferedReader(leitor);
 		String linha = buffer.readLine();
 		int contador = 0;
-		Lista aux = new Lista();
+		ListaObject aux = new ListaObject();
 		while(linha!=null) {
 			String[] lista = linha.split(";");
 			Aluno a = new Aluno(lista[0],lista[1],lista[2],lista[3], Integer.parseInt(lista[4]));
@@ -54,10 +47,9 @@ public class InserirGrupos implements IInserirGrupos{
 		return alunos;
 	}
 	
-	public Aluno popularTabelaInserirGrupo(String nomeArquivo, String nomeAluno) throws Exception {
+	public Aluno popularTabelaInserirGrupo(String nomeAluno) throws Exception {
 		
-		String path = System.getProperty("user.dir")+"/data";
-		File listaAlunos = new File(path, nomeArquivo);
+		File listaAlunos = new File(Arquivos.pathData, Arquivos.arquivoAlunos);
 		
 		Aluno retorno=null;
 		FileInputStream fluxo = new FileInputStream(listaAlunos);
@@ -79,12 +71,12 @@ public class InserirGrupos implements IInserirGrupos{
 
 		
 	@Override
-	public void inserirGrupos(String arquivoGrupos, String pathData, Aluno[] grupo, String codigoG, String tema,String nomeG, String area, String subarea) throws Exception {
-		File dir = new File(pathData);
+	public void inserirGrupos(Aluno[] grupo, String codigoG, String tema,String nomeG, String area, String subarea) throws Exception {
+		File dir = new File(Arquivos.pathData);
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
-		File arquivo = new File(pathData, arquivoGrupos);
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 		Grupo novoGrupo = new Grupo(nomeG, codigoG, tema, area, subarea, grupo);
 		String alunos = grupo[0].getRa()+";"+grupo[1].getRa()+";"+grupo[2].getRa()+";"+grupo[3].getRa();
 		String conteudo = (codigoG+";"+nomeG+";"+tema+";"+area+";"+subarea+";"+alunos+"\n");
@@ -107,14 +99,14 @@ public class InserirGrupos implements IInserirGrupos{
 	}
 	
 	@Override
-	public void editarGrupos(String arquivoGrupos, String pathData, Aluno[] grupo, String codigoG, String tema, String nomeG, String area, String subarea) throws Exception {
-		File arquivo = new File(pathData, arquivoGrupos);
+	public void editarGrupos(Aluno[] grupo, String codigoG, String tema, String nomeG, String area, String subarea) throws Exception {
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 		String alunos = grupo[0].getRa()+";"+grupo[1].getRa()+";"+grupo[2].getRa()+";"+grupo[3].getRa();
 		String conteudo = (codigoG+";"+nomeG+";"+tema+";"+area+";"+subarea+";"+alunos+"\n");
 		File arquivoTemp;
 		boolean exists = false;
 		if(arquivo.exists()) {
-			arquivoTemp = new File(pathData, "TEMP"+arquivoGrupos);
+			arquivoTemp = new File(Arquivos.pathData, "TEMP"+Arquivos.arquivoGrupos);
 		}else {
 			return;
 		}
@@ -147,14 +139,14 @@ public class InserirGrupos implements IInserirGrupos{
 	}
 	
 	@Override
-	public void excluirGrupos(String arquivoGrupos, String pathData, Aluno[] grupo, String codigoG, String tema, String nomeG, String area, String subarea) throws Exception {
-		File arquivo = new File(pathData, arquivoGrupos);
+	public void excluirGrupos(Aluno[] grupo, String codigoG, String tema, String nomeG, String area, String subarea) throws Exception {
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 		String alunos = grupo[0].getRa()+";"+grupo[1].getRa()+";"+grupo[2].getRa()+";"+grupo[3].getRa();
 		String conteudo = (codigoG+";"+nomeG+";"+tema+";"+area+";"+subarea+";"+alunos+"\n");
 		File arquivoTemp;
 		boolean controle = false;
 		if(arquivo.exists()) {
-			arquivoTemp = new File(pathData, "TEMP"+arquivoGrupos);
+			arquivoTemp = new File(Arquivos.pathData, "TEMP"+Arquivos.arquivoGrupos);
 		}else {
 			return;
 		}
@@ -189,8 +181,8 @@ public class InserirGrupos implements IInserirGrupos{
 		fluxo.close();
 	}
 
-	public String popularRa(String pathData, String arquivoAlunos, String ra) throws Exception {
-		File listaAlunos = new File(pathData, arquivoAlunos);
+	public String popularRa(String ra) throws Exception {
+		File listaAlunos = new File(Arquivos.pathData, Arquivos.pathData);
 		
 		FileInputStream fluxo = new FileInputStream(listaAlunos);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
@@ -246,9 +238,8 @@ public class InserirGrupos implements IInserirGrupos{
 		return false;
 	}
 
-	public String[] popularAreas(String pathData) throws Exception {
-		String nome = "lista-areas.csv";
-		File arquivo = new File(pathData, nome);
+	public String[] popularAreas() throws Exception {
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoAreas);
 		
 		FileInputStream fluxo = new FileInputStream(arquivo);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
@@ -265,9 +256,8 @@ public class InserirGrupos implements IInserirGrupos{
 		return areas;
 	}
 	
-	public String[] popularSubareas(String pathData, String areaAtual) throws Exception{
-		String nome = "lista-areas.csv";
-		File arquivo = new File(pathData, nome);
+	public String[] popularSubareas(String areaAtual) throws Exception{
+		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoAreas);
 		
 		FileInputStream fluxo = new FileInputStream(arquivo);
 		InputStreamReader leitor = new InputStreamReader(fluxo);
@@ -288,5 +278,4 @@ public class InserirGrupos implements IInserirGrupos{
 		buffer.close();
 		return areas;
 	}
-
 }

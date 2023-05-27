@@ -1,12 +1,12 @@
 package model;
-import java.util.Date;
+
 public class Orientacoes {
 	String nome;
 	String descricao;
-	Date data;
+	String data;
 	String codigoGrupo;
 	
-	public Orientacoes(String nome, String descricao, Date data, String codigoGrupo) {
+	public Orientacoes(String codigoGrupo, String nome, String descricao, String data) {
 		super();
 		this.nome = nome;
 		this.descricao = descricao;
@@ -25,16 +25,18 @@ public class Orientacoes {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public Date getData() {
+	public String getData() {
 		return data;
 	}
-	public void setData(Date data) {
+	public void setData(String data) {
 		this.data = data;
 	}
+
 	public String getCodigoGrupo() {
 		return codigoGrupo;
 	}
 	public void setCodigoGrupo(String codigoGrupo) {
 		this.codigoGrupo = codigoGrupo;
 	}
+	
 }
