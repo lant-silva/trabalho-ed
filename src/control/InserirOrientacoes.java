@@ -93,10 +93,10 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 		return data;
 	}
 
-	public void editarOrientacao(String codigo, String data, String nome, String descricao) throws Exception {
-		boolean exists = false;
-		if(arqOrientacao.exists()) {
-			exists = true;
-		}
-	}
+//	public void editarOrientacao(String codigo, String data, String nome, String descricao) throws Exception {
+//		boolean exists = false;
+//		if(arqOrientacao.exists()) {
+//			exists = true;
+//		}
+//	}
 }

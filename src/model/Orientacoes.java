@@ -6,7 +6,7 @@ public class Orientacoes {
 	String data;
 	String codigoGrupo;
 	
-	public Orientacoes(String codigoGrupo, String nome, String descricao, String data) {
+	public Orientacoes(String codigoGrupo, String nome, String data, String descricao) {
 		super();
 		this.nome = nome;
 		this.descricao = descricao;
