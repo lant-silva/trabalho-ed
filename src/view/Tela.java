@@ -42,9 +42,11 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import control.ConsultaGrupos;
 import control.ConsultaOrientacoes;
+import control.ConsultarSubarea;
 import control.InserirAluno;
 import control.InserirGrupos;
 import control.InserirOrientacoes;
@@ -74,7 +76,6 @@ public class Tela {
 	private JTextField dataOrientacao;
 	private JTextField nomeOrientacao;
 	private JTable tabelaUltimaOrientacao;
-	private JTextField textField_9;
 	private JTable table_4;
 	private JTextField nomeGrupo;
 	
@@ -92,6 +93,7 @@ public class Tela {
 	private InserirOrientacoes ManterOrientacoes = new InserirOrientacoes(); 
 	private ConsultaGrupos BuscarGrupos = new ConsultaGrupos();
 	private ConsultaOrientacoes ConsultarUltimaOrientacao = new ConsultaOrientacoes();
+	private ConsultarSubarea ConsultarSubArea = new ConsultarSubarea();
 	
 	String[] alunosLista=null; //Tela Inserir Grupos: Implementação do comboBox de alunos
 	private JTextField codigoGrupoOrientacoes;
@@ -430,6 +432,7 @@ public class Tela {
 		inserirOrientacoes.add(inserirOrientacao);
 		
 		JButton btnEditar_1 = new JButton("Editar");
+
 		btnEditar_1.setBounds(348, 409, 117, 25);
 		inserirOrientacoes.add(btnEditar_1);
 		
@@ -547,25 +550,6 @@ public class Tela {
 		tabelaUltimaOrientacao.setModel(new DefaultTableModel(
 			new Object[][] {
 				{"", "", ""},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
 			},
 			new String[] {
 				"Codigo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
@@ -592,17 +576,9 @@ public class Tela {
 		tabbedPane.addTab("Consultar por Sub-área", null, consultarSubarea, null);
 		consultarSubarea.setLayout(null);
 		
-		JLabel lblInformeASubrea = new JLabel("Informe a Sub-área:");
-		lblInformeASubrea.setBounds(112, 74, 141, 15);
-		consultarSubarea.add(lblInformeASubrea);
-		
-		textField_9 = new JTextField();
-		textField_9.setBounds(271, 74, 281, 17);
-		consultarSubarea.add(textField_9);
-		textField_9.setColumns(10);
-		
 		JButton btnBuscar_2 = new JButton("Buscar");
-		btnBuscar_2.setBounds(564, 69, 117, 25);
+
+		btnBuscar_2.setBounds(339, 306, 117, 25);
 		consultarSubarea.add(btnBuscar_2);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -614,43 +590,14 @@ public class Tela {
 		scrollPane_1.setViewportView(table_4);
 		table_4.setModel(new DefaultTableModel(
 			new Object[][] {
-				{"", "", "", ""},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
-				{null, null, null, null},
+				{"", "", ""},
 			},
 			new String[] {
-				"Codigo Grupo", "Nome Grupo", "Temas", "\u00C1rea de Conhecimento"
+				"Codigo Grupo", "Nome Grupo", "Temas"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
-				false, false, false, false
+				false, false, false
 			};
 			public boolean isCellEditable(int row, int column) {
 				return columnEditables[column];
@@ -659,7 +606,36 @@ public class Tela {
 		table_4.getColumnModel().getColumn(0).setPreferredWidth(101);
 		table_4.getColumnModel().getColumn(1).setPreferredWidth(170);
 		table_4.getColumnModel().getColumn(2).setPreferredWidth(150);
-		table_4.getColumnModel().getColumn(3).setPreferredWidth(212);
+		
+		JComboBox comboConsultaArea = new JComboBox();
+
+		comboConsultaArea.setBounds(199, 69, 206, 24);
+		consultarSubarea.add(comboConsultaArea);
+		try {
+			String[] areaConsulta = ManterGrupos.popularAreas();
+			comboConsultaArea.setModel(new DefaultComboBoxModel(areaConsulta));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		JComboBox comboConsultaSubarea = new JComboBox();
+		comboConsultaSubarea.setBounds(546, 69, 206, 24);
+		consultarSubarea.add(comboConsultaSubarea);
+		try {
+			String[] subareaConsulta = ManterGrupos.popularSubareas(comboConsultaArea.getSelectedItem().toString());
+			comboConsultaSubarea.setModel(new DefaultComboBoxModel(subareaConsulta));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		
+		JLabel lblArea = new JLabel("Área de Conhecimento");
+		lblArea.setBounds(30, 74, 174, 15);
+		consultarSubarea.add(lblArea);
+		
+		JLabel lblNewLabel_1 = new JLabel("Sub-área");
+		lblNewLabel_1.setBounds(470, 74, 70, 15);
+		consultarSubarea.add(lblNewLabel_1);
 
 		/*
 		 * Ações do sistema
@@ -815,6 +791,27 @@ public class Tela {
 				}
 			}
 		});
+//		[ Incompleto: ainda a ser implementado ]
+//					
+//		btnEditar_1.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				String cod = codigoGrupoOrientacoes.getText();
+//				String data = txtData.getText();
+//				String nome = txtOrientacao.getText();
+//				String descricao = descricaoOrientacao.getText();
+//				if(!orientacaoValida) {	
+//					JOptionPane.showMessageDialog(null, "O grupo especificado não existe");
+//				}else {
+//					try {
+//						ManterOrientacoes.editarOrientacao(cod, data, nome, descricao);
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//				}
+//			}
+//		});
 		
 		txtData.addKeyListener(new KeyAdapter(){
 			@Override
@@ -902,6 +899,32 @@ public class Tela {
 				}
 			}
 		});
+		
+		btnBuscar_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					table_4 = ConsultarSubArea.buscarSubarea(comboConsultaArea.getSelectedItem().toString(), comboConsultaSubarea.getSelectedItem().toString(), table_4);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		comboConsultaArea.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+
+					String areaAtual = (String) comboConsultaArea.getSelectedItem();
+					try {
+						String[] subareas = ManterGrupos.popularSubareas(areaAtual);
+						comboConsultaSubarea.setModel(new DefaultComboBoxModel(subareas));
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
+			}
+		});
 	}
 	
 
@@ -943,30 +966,42 @@ public class Tela {
 				}
 			});
 		
-		
 	}
 	
 	public void montarTabelaOrientacao(String[][] orientacao) {
-		tabelaUltimaOrientacao.setModel(new DefaultTableModel(
-				orientacao,
-				new String[] {
-					"Codigo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
-				}
-			) {
-				Class[] columnTypes = new Class[] {
-					String.class, String.class, String.class
-				};
-				public Class getColumnClass(int columnIndex) {
-					return columnTypes[columnIndex];
-				}
-				boolean[] columnEditables = new boolean[] {
-					false, false, false
-				};
-				public boolean isCellEditable(int row, int column) {
-					return columnEditables[column];
-				}
-			});
+
+			tabelaUltimaOrientacao.setModel(new DefaultTableModel(
+					orientacao,
+					new String[] {
+						"Codigo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
+					}
+				) {
+					Class[] columnTypes = new Class[] {
+						String.class, String.class, String.class
+					};
+					public Class getColumnClass(int columnIndex) {
+						return columnTypes[columnIndex];
+					}
+					boolean[] columnEditables = new boolean[] {
+						false, false, false
+					};
+					public boolean isCellEditable(int row, int column) {
+						return columnEditables[column];
+					}
+				});
+		
 	}
+	
+	public void montarTabelaSubarea(String[][] grupos) {
+		int tamanho = grupos.length;
+		for(int i=0;i<tamanho;i++) {
+			for(int j=0;j<3;j++) {
+				table_4.getModel().setValueAt(grupos[i][j], i, j);				
+			}
+		}
+	}
+
+
 	
 	public boolean verificarExistenteTabela(String aluno) {
 		if(aluno.equals(alunoT1.getAluno())||aluno.equals(alunoT2.getAluno())||aluno.equals(alunoT3.getAluno())||aluno.equals(alunoT4.getAluno())) {
@@ -978,7 +1013,6 @@ public class Tela {
 	}
 	
 	public void popularTabela(String nomeaux) {
-		
 		if(alunoT1.getAluno()=="") {
 				try {
 					alunoT1 = ManterGrupos.popularTabelaInserirGrupo(nomeaux);

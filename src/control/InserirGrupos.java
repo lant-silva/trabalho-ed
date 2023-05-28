@@ -182,7 +182,7 @@ public class InserirGrupos implements IInserirGrupos{
 	}
 
 	public String popularRa(String ra) throws Exception {
-		File listaAlunos = new File(Arquivos.pathData, Arquivos.pathData);
+		File listaAlunos = new File(Arquivos.pathData, Arquivos.arquivoAlunos);
 		
 		FileInputStream fluxo = new FileInputStream(listaAlunos);
 		InputStreamReader leitor = new InputStreamReader(fluxo);

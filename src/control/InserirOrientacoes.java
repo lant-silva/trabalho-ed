@@ -2,6 +2,7 @@ package control;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -11,6 +12,8 @@ import javax.swing.JOptionPane;
 import model.Arquivos;
 
 public class InserirOrientacoes implements IInserirOrientacoes{
+	File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
+	File arqOrientacao = new File(Arquivos.pathData, Arquivos.arquivoOrientacoes);
 	
 	/*
 	 * Esse código faz a leitura do "lista-grupos.csv", e coleta a linha que for condizente com o código inserido no JTextField
@@ -19,10 +22,7 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 	
 	@Override
 	public void manterOrientacoes(String codigo, String data, String nome, String descricao) throws Exception {
-		
-			File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
 			boolean exists = false;
-			File arqOrientacao = new File(Arquivos.pathData, Arquivos.arquivoOrientacoes);
 			if(arqOrientacao.exists()) {
 				exists = true;
 			}
@@ -91,5 +91,12 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 			return "";
 		}
 		return data;
+	}
+
+	public void editarOrientacao(String codigo, String data, String nome, String descricao) throws Exception {
+		boolean exists = false;
+		if(arqOrientacao.exists()) {
+			exists = true;
+		}
 	}
 }
