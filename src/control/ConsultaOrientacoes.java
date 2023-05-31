@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
+import javax.swing.JOptionPane;
+
 import model.Arquivos;
 import model.Orientacoes;
 import model.Pilha;
@@ -33,6 +35,10 @@ public class ConsultaOrientacoes implements IConsultaOrientacoes{
 		buffer.close();
 		leitor.close();
 		fluxo.close();
+		if(orientacoes.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Esse grupo não possui orientações ou o grupo não existe");
+			return orientacoes = new Pilha();
+		}
 		return orientacoes;
 	}
 }

@@ -2,7 +2,6 @@ package control;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -10,6 +9,7 @@ import java.io.PrintWriter;
 import javax.swing.JOptionPane;
 
 import model.Arquivos;
+import model.ListaString;
 
 public class InserirOrientacoes implements IInserirOrientacoes{
 	File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
@@ -92,11 +92,56 @@ public class InserirOrientacoes implements IInserirOrientacoes{
 		}
 		return data;
 	}
-
-//	public void editarOrientacao(String codigo, String data, String nome, String descricao) throws Exception {
-//		boolean exists = false;
-//		if(arqOrientacao.exists()) {
-//			exists = true;
-//		}
-//	}
+	
+	@Override
+	public void finalizarUltimaOrientacao(String codigo) throws Exception{
+		ListaString orientacaoGrupo = new ListaString();
+		boolean exists = false;
+		if(!arqOrientacao.exists()) {
+			JOptionPane.showMessageDialog(null, "Não há orientações");
+			return;
+		}else {	
+			exists = true;
+			File arquivoTemp = new File(Arquivos.pathData, "TEMP"+Arquivos.arquivoOrientacoes);
+			FileInputStream fluxo = new FileInputStream(arqOrientacao);
+			InputStreamReader leitor = new InputStreamReader(fluxo);
+			BufferedReader buffer = new BufferedReader(leitor);
+			FileWriter escrita = new FileWriter(arquivoTemp, exists);
+			PrintWriter print = new PrintWriter(escrita);
+			String linha = buffer.readLine();
+			while(linha!=null) {
+				String[] aux = linha.split(";");
+				if(codigo.equals(aux[0])) {
+					if(orientacaoGrupo.isEmpty()) {
+						orientacaoGrupo.addFirst(linha);
+					}else {
+						orientacaoGrupo.addLast(linha);
+					}
+				}else {
+					print.write(linha+"\n");
+					print.flush();
+				}
+				linha = buffer.readLine();
+			}
+			int tamanhoLista = orientacaoGrupo.size();
+			while(tamanhoLista>1) {
+				print.write(orientacaoGrupo.get(0)+"\n");
+				print.flush();
+				orientacaoGrupo.removeFirst();
+				tamanhoLista--;
+			}
+			if(tamanhoLista==0) {
+				JOptionPane.showMessageDialog(null, "Esse grupo não possui orientações");
+			}else {
+				JOptionPane.showMessageDialog(null, "Orientação finalizada");
+			}
+			arquivoTemp.renameTo(arqOrientacao);
+			orientacaoGrupo = new ListaString();
+			fluxo.close();
+			buffer.close();
+			leitor.close();
+			print.close();
+			escrita.close();
+		}
+	}
 }

@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -49,7 +50,13 @@ public class ConsultarSubarea implements IConsultarSubarea{
 			}
 			linha = buffer.readLine();
 		}
-		return criarTabela(gruposSub, tabela);
+		if(!gruposSub.isEmpty()) {			
+			return criarTabela(gruposSub, tabela);
+		}else {
+			JOptionPane.showMessageDialog(null, "Essa sub-área não possui grupos");
+		}
+		ListaString novo = new ListaString();
+		return criarTabela(novo, tabela);
 	}
 	
 	private JTable criarTabela(ListaString gruposSub, JTable tabela) {

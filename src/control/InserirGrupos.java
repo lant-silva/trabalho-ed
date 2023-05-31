@@ -105,6 +105,7 @@ public class InserirGrupos implements IInserirGrupos{
 		String conteudo = (codigoG+";"+nomeG+";"+tema+";"+area+";"+subarea+";"+alunos+"\n");
 		File arquivoTemp;
 		boolean exists = false;
+		boolean editado = false;
 		if(arquivo.exists()) {
 			arquivoTemp = new File(Arquivos.pathData, "TEMP"+Arquivos.arquivoGrupos);
 		}else {
@@ -130,7 +131,11 @@ public class InserirGrupos implements IInserirGrupos{
 			linha = buffer.readLine();
 		}
 		arquivoTemp.renameTo(arquivo);
-		JOptionPane.showMessageDialog(null, "Grupo editado.");
+		if(editado==true) {
+			JOptionPane.showMessageDialog(null, "Grupo editado.");			
+		}else {
+			JOptionPane.showMessageDialog(null, "Grupo não encontrado");
+		}
 		print.close();
 		escrita.close();
 		buffer.close();
@@ -141,10 +146,8 @@ public class InserirGrupos implements IInserirGrupos{
 	@Override
 	public void excluirGrupos(Aluno[] grupo, String codigoG, String tema, String nomeG, String area, String subarea) throws Exception {
 		File arquivo = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
-		String alunos = grupo[0].getRa()+";"+grupo[1].getRa()+";"+grupo[2].getRa()+";"+grupo[3].getRa();
-		String conteudo = (codigoG+";"+nomeG+";"+tema+";"+area+";"+subarea+";"+alunos+"\n");
 		File arquivoTemp;
-		boolean controle = false;
+		boolean excluido = false;
 		if(arquivo.exists()) {
 			arquivoTemp = new File(Arquivos.pathData, "TEMP"+Arquivos.arquivoGrupos);
 		}else {
@@ -160,14 +163,14 @@ public class InserirGrupos implements IInserirGrupos{
 		while(linha!=null) {
 			String[] aux = linha.split(";");
 			if(codigoG.equals(aux[0])) {
-				controle = true;
+				excluido = true;
 			}else {		
 				print.write(linha+"\n");
 				print.flush();
 			}
 			linha = buffer.readLine();
 		}
-		if(controle==true) {
+		if(excluido==true) {
 			arquivoTemp.renameTo(arquivo);
 			JOptionPane.showMessageDialog(null, "Grupo excluido.");
 		}else {
@@ -188,17 +191,18 @@ public class InserirGrupos implements IInserirGrupos{
 		InputStreamReader leitor = new InputStreamReader(fluxo);
 		BufferedReader buffer = new BufferedReader(leitor);
 		String linha = buffer.readLine();
+		String envio = null;
 		while(linha!=null) {
 			String[] lista = linha.split(";");
-			if(lista[0].contains(ra)) {
-				return lista[1];
+			if(ra.equals(lista[0])) {
+				envio = lista[1];
 			}
 			linha = buffer.readLine();
 		}
 		buffer.close();
 		leitor.close();
 		fluxo.close();
-		return null;
+		return envio;
 	}
 	
 	private boolean validarGrupo (File arquivo, Grupo grupo, String conteudo) throws Exception{

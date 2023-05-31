@@ -1,11 +1,7 @@
 /*
  * Sistema de Gerenciamento de TCC - Trabalho Semestral de Estrutura de Dados ( 3º ADS Tarde ) 
- * Data de finalização: A ser determinada
- * 
- * Integrantes: Luiz Antonio da Silva Cruz
- * 				Jonathan de Oliveira Custódio
- * 				Natan Esposito
- * 				Davi de Queiroz Romão
+ * Data de início do desenvolvimento: 19/05/2023
+ * Data da ultima atualização: 31/05/2023 02:13
  * 
  * Estrutura do corpo: - Variaveis
  * 					   - Corpo das telas
@@ -163,7 +159,15 @@ public class Tela {
                 else
                 {
                     raAluno.setEditable(false);
-                }
+                }	
+		        if (raAluno.getText().length() >= 13)
+		        {
+		            raAluno.setEditable(false);
+		        }
+		        if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+		        {
+		            raAluno.setEditable(true);
+		        }
 			}
 		});
 		raAluno.setColumns(10);
@@ -220,6 +224,7 @@ public class Tela {
 		
 		JComboBox listaAlunosTabela = new JComboBox();
 
+
 		try {
 			alunosLista = ManterGrupos.popularListaAlunos();
 			listaAlunosTabela.setModel(new DefaultComboBoxModel(alunosLista));
@@ -243,11 +248,6 @@ public class Tela {
 		inserirGrupos.add(textPane);
 		
 		String raSelecionado = (String) listaAlunosTabela.getSelectedItem();
-		try {
-			textPane.setText(ManterGrupos.popularRa(raSelecionado));
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
 		
 		JButton btnInserirGrupo = new JButton("Inserir Grupo");
 
@@ -363,7 +363,9 @@ public class Tela {
 
 		btnLimparCampos.setBounds(534, 409, 144, 25);
 		inserirGrupos.add(btnLimparCampos);
+//=================================================================================================//		
 		
+//=============================[ Tela: Inserir Orientações ]=======================================//
 		JPanel inserirOrientacoes = new JPanel();
 		tabbedPane.addTab("Inserir Orientações", null, inserirOrientacoes, null);
 		inserirOrientacoes.setLayout(null);
@@ -428,17 +430,13 @@ public class Tela {
 		
 		JButton inserirOrientacao = new JButton("Inserir Orientação");
 
-		inserirOrientacao.setBounds(167, 409, 169, 25);
+		inserirOrientacao.setBounds(198, 409, 169, 25);
 		inserirOrientacoes.add(inserirOrientacao);
 		
-		JButton btnEditar_1 = new JButton("Editar");
+		JButton btnFinalizar = new JButton("Finalizar Ultima Orientação");
 
-		btnEditar_1.setBounds(348, 409, 117, 25);
-		inserirOrientacoes.add(btnEditar_1);
-		
-		JButton btnExcluir_1 = new JButton("Excluir");
-		btnExcluir_1.setBounds(477, 409, 117, 25);
-		inserirOrientacoes.add(btnExcluir_1);
+		btnFinalizar.setBounds(404, 409, 233, 25);
+		inserirOrientacoes.add(btnFinalizar);
 		
 		codigoGrupoOrientacoes = new JTextField();
 		codigoGrupoOrientacoes.setBounds(186, 38, 114, 19);
@@ -449,7 +447,9 @@ public class Tela {
 
 		btnBuscar_3.setBounds(312, 35, 117, 25);
 		inserirOrientacoes.add(btnBuscar_3);
+//============================================================================================//		
 		
+//=======================[ Tela: Consulta de Grupos ]=========================================//
 		JPanel consultaGruposCodigo = new JPanel();
 		tabbedPane.addTab("Consulta de Grupos", (Icon) null, consultaGruposCodigo, null);
 		consultaGruposCodigo.setLayout(null);
@@ -502,7 +502,9 @@ public class Tela {
 		table_1.getColumnModel().getColumn(0).setPreferredWidth(140);
 		table_1.getColumnModel().getColumn(1).setPreferredWidth(125);
 		table_1.getColumnModel().getColumn(2).setPreferredWidth(280);
+//=======================================================================================================//
 		
+//====================[ Tela: Consultar ultima orientação ]==============================================//		
 		JPanel consultarUltimaOrientacao = new JPanel();
 		tabbedPane.addTab("Consultar Ultima Orientação", null, consultarUltimaOrientacao, null);
 		consultarUltimaOrientacao.setLayout(null);
@@ -542,7 +544,7 @@ public class Tela {
 		consultarUltimaOrientacao.add(lblNomeOrientao);
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
-		scrollPane_3.setBounds(97, 234, 556, 135);
+		scrollPane_3.setBounds(12, 246, 503, 135);
 		consultarUltimaOrientacao.add(scrollPane_3);
 		
 		tabelaUltimaOrientacao = new JTable();
@@ -568,10 +570,22 @@ public class Tela {
 				return columnEditables[column];
 			}
 		});
+		
+		JTextArea txtDescricao = new JTextArea();
+		txtDescricao.setEditable(false);
+		txtDescricao.setLineWrap(true);
+		txtDescricao.setBounds(536, 247, 249, 135);
+		consultarUltimaOrientacao.add(txtDescricao);
+		
+		JLabel lblDescrioDaOrientao = new JLabel("Descrição da Orientação");
+		lblDescrioDaOrientao.setBounds(572, 220, 174, 15);
+		consultarUltimaOrientacao.add(lblDescrioDaOrientao);
 		tabelaUltimaOrientacao.getColumnModel().getColumn(0).setPreferredWidth(104);
 		tabelaUltimaOrientacao.getColumnModel().getColumn(1).setPreferredWidth(129);
 		tabelaUltimaOrientacao.getColumnModel().getColumn(2).setPreferredWidth(366);
+//===============================================================================================//		
 		
+//======================[ Tela: Consultar por Sub-Área ]=========================================//	
 		JPanel consultarSubarea = new JPanel();
 		tabbedPane.addTab("Consultar por Sub-área", null, consultarSubarea, null);
 		consultarSubarea.setLayout(null);
@@ -636,15 +650,13 @@ public class Tela {
 		JLabel lblNewLabel_1 = new JLabel("Sub-área");
 		lblNewLabel_1.setBounds(470, 74, 70, 15);
 		consultarSubarea.add(lblNewLabel_1);
-
+//======================================================================================================//
+		
 		/*
 		 * Ações do sistema
 		 * Variam de botões, cliques do mouse, entradas e saidas, etc. 
 		 * 
-		 * 
 		 */
-		
-
 //===================[ Ação que insere um aluno na lista de alunos da tela "Inserir Aluno" ]============//		
 		btnGravarAluno.addMouseListener(new MouseAdapter() {
 			@Override
@@ -676,18 +688,6 @@ public class Tela {
 				montarTabela();	
 			}
 		});
-		
-		listaAlunosTabela.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-					textPane.setText(ManterGrupos.popularRa(raSelecionado));
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
-		
 //============[ Ação que limpa os campos da tela "Inserir Grupos" ]==============//		
 		btnLimparCampos.addMouseListener(new MouseAdapter() {
 			@Override
@@ -720,7 +720,22 @@ public class Tela {
 				}
 			}
 		});
-		
+
+//============[ Ação que mostra o RA de um aluno selecionado na tela de Inserir Grupos ==========//
+		listaAlunosTabela.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				try {
+					String aux = (String) listaAlunosTabela.getSelectedItem();
+					aux  = ManterGrupos.popularRa(aux);
+					textPane.setText(aux);
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+
+//==========[ Ação que faz a busca de um grupo da tela Consultar Grupos ]=========//
 		btnBuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -738,7 +753,8 @@ public class Tela {
 				
 			}
 		});
-		
+
+//=============[ Ação que insere as areas e sub-áreas nos comboBox da tela de Inserir Grupos]=======//
 		comboAreaInserir.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				String areaAtual = (String) comboAreaInserir.getSelectedItem();
@@ -752,6 +768,7 @@ public class Tela {
 			}
 		});
 		
+//==============[ Ação para verificar a existencia de um grupo na tela Inserir Orientações ]========//
 		btnBuscar_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -771,7 +788,8 @@ public class Tela {
 				}
 			}
 		});
-		
+
+//=============[ Ação para inserir uma orientação em um arquivo CSV ]========================//
 		inserirOrientacao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -790,29 +808,30 @@ public class Tela {
 					}
 				}
 			}
+			
 		});
-//		[ Incompleto: ainda a ser implementado ]
-//					
-//		btnEditar_1.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				String cod = codigoGrupoOrientacoes.getText();
-//				String data = txtData.getText();
-//				String nome = txtOrientacao.getText();
-//				String descricao = descricaoOrientacao.getText();
-//				if(!orientacaoValida) {	
-//					JOptionPane.showMessageDialog(null, "O grupo especificado não existe");
-//				}else {
-//					try {
-//						ManterOrientacoes.editarOrientacao(cod, data, nome, descricao);
-//					} catch (Exception e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//				}
-//			}
-//		});
-		
+
+//==============[ Ação para finalizar a ultima orientação de um grupo na tela Inserir Orientação ]=======//
+		btnFinalizar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				String cod = codigoGrupoOrientacoes.getText();
+				String data = txtData.getText();
+				String nome = txtOrientacao.getText();
+				String descricao = descricaoOrientacao.getText();
+				if(!orientacaoValida) {	
+					JOptionPane.showMessageDialog(null, "O grupo especificado não existe");
+				}else {
+					try {
+						ManterOrientacoes.finalizarUltimaOrientacao(cod);
+					} catch (Exception e2) {
+						// TODO: handle exception
+					}
+				}
+			}
+		});
+
+//============[ Ação para obter uma formatação correta da data, na tela Inserir Orientação ]===========//
 		txtData.addKeyListener(new KeyAdapter(){
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -846,6 +865,7 @@ public class Tela {
 			}
 		});
 		
+//==================[ Ação para editar um grupo existente na tela Inserir Grupos ]================//
 		btnEditar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -856,7 +876,11 @@ public class Tela {
 				String area = (String) comboAreaInserir.getSelectedItem();
 				String subarea = (String) comboSubareaInserir.getSelectedItem();
 				try {
-					ManterGrupos.editarGrupos(grupo, codigoG, tema, nomeG, area, subarea);
+					if(codigoG=="") {
+						JOptionPane.showMessageDialog(null, "Insira o codigo do grupo a ser editado");
+					}else {
+						ManterGrupos.editarGrupos(grupo, codigoG, tema, nomeG, area, subarea);
+					}
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -865,7 +889,8 @@ public class Tela {
 				
 			}
 		});
-		
+
+//============[ Ação para excluir um grupo existente na tela Inserir Grupos ]============//
 		btnExcluir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -882,15 +907,20 @@ public class Tela {
 				}
 			}
 		});	
-		
+
+//==========[ Ação para consultar a ultima orientação de um grupo ]===============//
 		btnBuscarOrientacao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
 					orientacoes = ConsultarUltimaOrientacao.consultarOrientacao(inserirCodigoBuscaOrientacao.getText().toString());
-					Orientacoes aux = (Orientacoes) orientacoes.pop();
+					Orientacoes aux = new Orientacoes("","","","");
+					if(!orientacoes.isEmpty()) {						
+						aux = (Orientacoes) orientacoes.pop();
+					}
 					dataOrientacao.setText(aux.getData());
 					nomeOrientacao.setText(aux.getNome());
+					txtDescricao.setText(aux.getDescricao());
 					String[][] mostrarUltimaOrientacao = {{aux.getCodigoGrupo(), aux.getData(), aux.getNome()}};
 					montarTabelaOrientacao(mostrarUltimaOrientacao);
 				} catch (Exception e1) {
@@ -899,7 +929,8 @@ public class Tela {
 				}
 			}
 		});
-		
+
+//=============[ Ação para consultar os grupos de uma determinada sub-área, na tela Consultar por Sub-Área ]=========//
 		btnBuscar_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -911,6 +942,8 @@ public class Tela {
 				}
 			}
 		});
+		
+//============[ Ação para popular o comboBox das sub-áreas ]=====================//
 		comboConsultaArea.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 
@@ -926,6 +959,13 @@ public class Tela {
 			}
 		});
 	}
+	
+	/*
+	 * Métodos
+	 * Algumas funções para auxiliar a construção do corpo
+	 * 
+	 */
+	
 	
 
 	public void montarTabela() {
