@@ -124,7 +124,7 @@ public class Tela {
 		
 //==================[ Criação da Tela ]=======================================//
 		frmSistemaDeGesto = new JFrame();
-		frmSistemaDeGesto.setTitle("Sistema de Gestão de TCC");
+		frmSistemaDeGesto.setTitle("Sistema de Gestão de TCC - "+System.getProperty("os.name"));
 		frmSistemaDeGesto.setBounds(100, 100, 824, 521);
 		frmSistemaDeGesto.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSistemaDeGesto.getContentPane().setLayout(null);
