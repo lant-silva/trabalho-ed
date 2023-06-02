@@ -1,7 +1,7 @@
 /*
  * Sistema de Gerenciamento de TCC - Trabalho Semestral de Estrutura de Dados ( 3º ADS Tarde ) 
  * Data de início do desenvolvimento: 19/05/2023
- * Data da ultima atualização: 31/05/2023 02:13
+ * Data da ultima atualização: 02/06/2023 06:00
  * 
  * Estrutura do corpo: - Variaveis
  * 					   - Corpo das telas
@@ -21,6 +21,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -38,7 +40,6 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import control.ConsultaGrupos;
 import control.ConsultaOrientacoes;
@@ -47,6 +48,7 @@ import control.InserirAluno;
 import control.InserirGrupos;
 import control.InserirOrientacoes;
 import model.Aluno;
+import model.Arquivos;
 import model.Orientacoes;
 import model.Pilha;
 
@@ -114,6 +116,7 @@ public class Tela {
 	 * Create the application.
 	 */
 	public Tela() {
+		criarArquivos();
 		initialize();
 	}
 
@@ -976,6 +979,25 @@ public class Tela {
 		});
 	}
 	
+	private void criarArquivos() {
+		File alunos = new File(Arquivos.pathData, Arquivos.arquivoAlunos);
+		File grupos = new File(Arquivos.pathData, Arquivos.arquivoGrupos);
+		File orientacoes = new File(Arquivos.pathData, Arquivos.arquivoOrientacoes);
+		try {
+			if(!alunos.exists()) {
+				alunos.createNewFile(); 				
+			}			
+			if(!grupos.exists()) {
+				grupos.createNewFile();				
+			}
+			if(!orientacoes.exists()){
+				orientacoes.createNewFile();				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/*
 	 * Métodos
 	 * Algumas funções para auxiliar a construção do corpo
