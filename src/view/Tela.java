@@ -412,7 +412,7 @@ public class Tela {
 				{null, null, null},
 			},
 			new String[] {
-				"C\u00F3digo Grupo", "Data Orienta\u00E7\u00E3o", "Nome Orienta\u00E7\u00E3o"
+				"Codigo Grupo", "Data Orientacao", "Nome Orientacao"
 			}
 		) {
 			boolean[] columnEditables = new boolean[] {
@@ -802,6 +802,22 @@ public class Tela {
 				}else {
 					try {
 						ManterOrientacoes.manterOrientacoes(cod, data, nome, descricao);
+						table_2.setModel(new DefaultTableModel(
+								new Object[][] {
+									{"Codigo Grupo", "Data Orientacao", "Nome Orientacao"},
+									{cod, data, nome},
+								},
+								new String[] {
+									"Codigo Grupo", "Data Orientacao", "Nome Orientacao"
+								}
+							) {
+								boolean[] columnEditables = new boolean[] {
+									false, false, false
+								};
+								public boolean isCellEditable(int row, int column) {
+									return columnEditables[column];
+								}
+							});
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
