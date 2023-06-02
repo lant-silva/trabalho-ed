@@ -19,7 +19,7 @@ necessidade, consultar, por subárea, quais os grupos envolvidos.
 
 Participantes: 
  - DAVI DE QUEIROZ
- - GUILHERME GUSTAVO DE SOUZA RODRIGUES
  - JONATHAN DE OLIVEIRA CUSTODIO
  - LUIZ ANTONIO DA SILVA CRUZ
  - NATAN ESPOSITO
+ - WALLACE MARTINS VIEIRA
