@@ -992,7 +992,7 @@ public class Tela {
 	public void montarTabelaGrupo(String[] var) {
 		table_1.setModel(new DefaultTableModel(
 				new Object[][] {
-					{var[1], var[0], var[2]},
+					{var[0], var[1], var[2]},
 				},
 				new String[] {
 					"Codigo Grupo", "Nome Grupo", "Tema"
